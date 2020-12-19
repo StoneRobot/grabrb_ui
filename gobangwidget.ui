@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>gobangWidget</class>
+ <widget class="QWidget" name="gobangWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1001</width>
+    <height>673</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1">
+   <item>
+    <layout class="QGridLayout" name="gridLayout" columnstretch="1,3" columnminimumwidth="0,0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item row="0" column="1">
+      <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,5">
+       <item>
+        <widget class="QGroupBox" name="Gobang_state_groupBox">
+         <property name="styleSheet">
+          <string notr="true">QGroupBox{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black
+;
+
+margin-top:0.5ex;
+
+}
+
+QGroupBox::title{
+
+subcontrol-origin:margin;
+
+subcontrol-position:top left;
+
+left:10px;
+
+margin-left:0px;
+
+padding:0 1px;
+
+}</string>
+         </property>
+         <property name="title">
+          <string>五子棋状态机</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLabel" name="State_Init">
+              <property name="styleSheet">
+               <string notr="true">QLable{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black;
+
+margin-top:0.5ex;
+
+}</string>
+              </property>
+              <property name="text">
+               <string>初始状态</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="State_Run">
+              <property name="text">
+               <string>对战状态</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="State_Stop">
+              <property name="text">
+               <string>暂停状态</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="State_Exit">
+              <property name="text">
+               <string>退出状态</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="State_Error">
+              <property name="text">
+               <string>异常状态</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="chessboardGroupBox">
+         <property name="styleSheet">
+          <string notr="true">QGroupBox{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black;
+
+margin-top:0.5ex;
+
+}
+
+QGroupBox::title{
+
+subcontrol-origin:margin;
+
+subcontrol-position:top left;
+
+left:10px;
+
+margin-left:0px;
+
+padding:0 1px;
+
+}</string>
+         </property>
+         <property name="title">
+          <string>棋盘</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QGroupBox" name="whiteBox">
+                <property name="title">
+                 <string>白棋方</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_6">
+                 <item>
+                  <widget class="QLabel" name="white_label">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="blackBox">
+                <property name="title">
+                 <string>黑棋方</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <item>
+                  <widget class="QLabel" name="black_label">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QLabel" name="ChessBoardLabel">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="ConfirmButton">
+                <property name="text">
+                 <string>确认</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="ModegroupBox">
+       <property name="styleSheet">
+        <string notr="true">QGroupBox{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black
+;
+
+margin-top:0.5ex;
+
+}
+
+QGroupBox::title{
+
+subcontrol-origin:margin;
+
+subcontrol-position:top left;
+
+left:10px;
+
+margin-left:0px;
+
+padding:0 1px;
+
+}</string>
+       </property>
+       <property name="title">
+        <string>模式设置</string>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="2,2,2,2,2,2,2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,2">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinAndMaxSize</enum>
+          </property>
+          <item>
+           <widget class="QLabel" name="Modelabel">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>    模 式 :</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="ModeBox">
+            <item>
+             <property name="text">
+              <string>MODE</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PVP</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PVR</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>RVP</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>RVR</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ChangeModeButton">
+          <property name="text">
+           <string>切换模式</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,2">
+          <item>
+           <widget class="QLabel" name="FirstRoundlabel_">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>先手方 :</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="FirstRoundBox">
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string>RANDOM</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>WHITE</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>BLACK</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="StartButton">
+          <property name="text">
+           <string>开始</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="StopButton">
+          <property name="text">
+           <string>暂停</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ResumeButton">
+          <property name="text">
+           <string>继续</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="RestartButton">
+          <property name="text">
+           <string>重新开始</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
