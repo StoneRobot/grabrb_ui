@@ -35,40 +35,34 @@ void gobangWidget::signalAndSlot()
 void gobangWidget::uiInit()
 {
     //设定&初始化状态机各状态框
-    ui->ModegroupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fszb/photo/hhh.jpg); }");
+    ui->ModegroupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/photo/hhh.jpg); }");
+    ui->ChessBoardLabel->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/ChessDemo.png); }");
     ui->State_Init->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->State_Run->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->State_Stop->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->State_Error->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->State_Exit->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
 
-    move = new QMovie("/home/fszb/photo/work.gif");
-    //ui->whiteBox->setMovie(move);
 }
 
 
 void gobangWidget::RosInit()
 {
-    control_pub = Node -> advertise<std_msgs::String>("/GobangGame/ControlSignal", 100);
-    ChessBoardImg_sub = Node -> subscribe<sensor_msgs::Image>("/GobangVision/ChessBoardDetection", 1, &gobangWidget::ChessBoardImg_callback, this);
-
-    isUpdate = false;
+    control_pub = Node->advertise <std_msgs::String>("/GobangGame/ControlSignal", 100);
+    ChessBoardImg_sub = Node->subscribe <sensor_msgs::Image>("/GobangVision/ChessBoardDetection", 1, &gobangWidget::ChessBoardImg_callback, this);
+    hscfsm_task_client = Node->serviceClient <hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
 }
 
+/*----------------------------------------------------------------------------------------*/
 
 void gobangWidget::slot_RevPixmap()
 {
-//    while(!isUpdate)
-//    {
-//        std::cout << "Waiting for update..." << std::endl;
-//        sleep(1);
-//    }
-//    isUpdate = false;
+    //cv::Mat转QImage
     QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
     QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
-    tmp_pixmap = tmp_pixmap.scaled(this->width() * 3/4, this->height() * 2/3, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
+    //设置在对应label中显示
     ui->ChessBoardLabel->setPixmap(tmp_pixmap);
+    ui->ChessBoardLabel->setScaledContents(true);
 }
 
 
@@ -82,7 +76,6 @@ void gobangWidget::slot_StartButton_clicked()
     }
 
     //打印出所选参数让玩家确认
-
     std::string param = "模式: " + mode + "; 先手方: " + firstRound;
     const char *p = param.c_str();
     QMessageBox::StandardButton result = QMessageBox::information(this, "Confirm", QString::fromLocal8Bit(p), QMessageBox::Yes|QMessageBox::No);
@@ -100,6 +93,10 @@ void gobangWidget::slot_StartButton_clicked()
 
     //开始后不能继续选择先手方，先手方只能在棋局开始之前设置
     ui->FirstRoundBox->setEnabled(false);
+
+    //设置五子棋状态机到run状态，开始对局
+    //if (taskServerCmd("start", ))
+
 }
 
 
@@ -172,8 +169,9 @@ void gobangWidget::slot_ChangeModeButton_clicked()
 }
 
 
+/*----------------------------------------------------------------------------------------*/
 
-
+/*----------------------------------------------------------------------------------------*/
 
 
 void gobangWidget::pub_control_signal(std::string order)
@@ -191,12 +189,36 @@ void gobangWidget::ChessBoardImg_callback(const sensor_msgs::Image::ConstPtr &ms
     const cv_bridge::CvImageConstPtr &ptr = cv_bridge::toCvShare(msg, "bgr8");
     live = ptr->image;
     cv::cvtColor(live, live, CV_BGR2RGB);
-    //isUpdate = true;
 
     //触发自定义显示图片槽函数
     emit displayPixmap();
 
 }
 
+int gobangWidget::taskServerCmd(const std::string &behavior, const std::string &next_state, const std::vector<std::string> &params)
+{
+    hirop_msgs::taskInputCmd task_srv;
+    task_srv.request.behavior = behavior;
+    task_srv.request.param = params;
+    if(hscfsm_task_client.call(task_srv))
+    {
+        usleep(10000);
+        if(task_srv.response.ret == 0)
+        {
+            std::cout << "进入" << next_state << "状态" << std::endl;
+        }
+        else
+        {
+            std::cout << "进入" << next_state << "状态失败" << std::endl;
+        }
+        return task_srv.response.ret;
+    }
+    else
+    {
+        std::cout << "调用" << next_state << "状态失败" << std::endl;
+    }
+    return -1;
+}
 
 
+/*----------------------------------------------------------------------------------------*/

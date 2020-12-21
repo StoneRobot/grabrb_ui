@@ -22,7 +22,7 @@ dulgripperWidget::~dulgripperWidget()
 void dulgripperWidget::signalAndSlot()
 {
     //绑定信号与槽
-    connect(ui->loadDulGripperFsm, SIGNAL(clicked(bool)), this, SLOT(on_loadDulGripperFsm_clicked()));
+//    connect(ui->loadDulGripperFsm, SIGNAL(clicked(bool)), this, SLOT(on_loadDulGripperFsm_clicked()));
     connect(ui->prepareButton, SIGNAL(clicked(bool)), this, SLOT(slot_prepareButton_clicked()));
     connect(ui->gripButton, SIGNAL(clicked(bool)), this,SLOT(slot_gripButton_clicked()));
     connect(ui->stopButton, SIGNAL(clicked(bool)), this, SLOT(slot_stopButton_clicked()));
@@ -35,7 +35,7 @@ void dulgripperWidget::signalAndSlot()
 
 void dulgripperWidget::uiInit()
 {
-    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/st/grabrb_ui/photo/jjj.png); }");
+    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/photo/jjj.png); }");
     ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
@@ -199,7 +199,7 @@ void dulgripperWidget::slot_RevPixmap()
 void dulgripperWidget::on_loadDulGripperFsm_clicked()
 {
     hirop_msgs::startTaskCmd srv;
-    srv.request.
+    //srv.request.
     srv.request.taskId = 5;
     start_task_client_.call(srv);
 }

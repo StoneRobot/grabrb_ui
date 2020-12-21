@@ -19,7 +19,10 @@
 #include <cv_bridge/cv_bridge.h>
 #include <std_msgs/String.h>
 #include <sensor_msgs/Image.h>
+#include <hirop_msgs/taskInputCmd.h>
+
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
 
 namespace Ui {
 class gobangWidget;
@@ -41,7 +44,6 @@ private:
 
     //控件初始化
     void uiInit();
-
 
 signals:
 
@@ -98,13 +100,13 @@ private slots:
 
 private:
 
-    //ros
+    //ros节点指针
     ros::NodeHandle *Node;
+
+    //ros发布端、订阅端、服务客户端
     ros::Publisher control_pub;
     ros::Subscriber ChessBoardImg_sub;
-
-    //图片更新标志位
-    std::atomic<bool> isUpdate;
+    ros::ServiceClient hscfsm_task_client;
 
 private:
 
@@ -120,7 +122,6 @@ private:
     //状态运行效果图
     QMovie *move;
 
-
     /*
      * @brief: ROS端初始化
      */
@@ -135,6 +136,12 @@ private:
      * @brief: 棋盘最新识别照片话题回调函数
      */
     void ChessBoardImg_callback(const sensor_msgs::Image::ConstPtr &msg);
+
+    /*
+     * @brief: 状态机切换状态行为函数
+     */
+    int taskServerCmd(const std::string& behavior, const std::string& next_state,
+                      const std::vector<std::string>& params=std::vector<std::string>());
 
 };
 

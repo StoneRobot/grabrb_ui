@@ -400,11 +400,6 @@ padding:0 1px;
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab">
-           <attribute name="title">
-            <string>五子棋</string>
-           </attribute>
-          </widget>
          </widget>
         </item>
        </layout>

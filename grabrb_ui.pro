@@ -39,14 +39,12 @@ LIBS +=  /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv*
 
 INCLUDEPATH += /home/fshs/catkin_ws/devel/include
 
-
-
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
         gobangwidget.cpp \
         cubewidget.cpp \
-    dulgripperwidget.cpp
+        dulgripperwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -59,4 +57,4 @@ FORMS += \
         mainwindow.ui \
         gobangwidget.ui \
         cubewidget.ui \
-    dulgripperwidget.ui
+        dulgripperwidget.ui

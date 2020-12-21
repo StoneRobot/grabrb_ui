@@ -20,7 +20,7 @@ cubeWidget::~cubeWidget()
 void cubeWidget::signalAndSlot()
 {
     //绑定信号与槽
-    connect(ui->loadCubeSolveFsm, SIGNAL(clicked(bool)), this, SLOT(on_loadCubeSolveFsm_clicked()));
+    //connect(ui->loadCubeSolveFsm, SIGNAL(clicked(bool)), this, SLOT(on_loadCubeSolveFsm_clicked()));
     connect(ui->collectButton, SIGNAL(clicked(bool)), this, SLOT(slot_collectButton_clicked()));
     connect(ui->solveButton, SIGNAL(clicked(bool)), this, SLOT(slot_solveButton_clicked()));
     connect(ui->excuteButton, SIGNAL(clicked(bool)), this, SLOT(slot_excuteButton_clicked()));
@@ -35,13 +35,13 @@ void cubeWidget::signalAndSlot()
 
 void cubeWidget::uiInit()
 {
-    ui->cubeModeBox->setStyleSheet("QGroupBox{ border-image: url(/home/st/grabrb_ui/photo/cube.jpg); }");
-    ui->RightImg_label->setStyleSheet("QLabel{ border-image: url(/home/st/grabrb_ui/photo/unknown.jpg); }");
-    ui->UpImg_label->setStyleSheet("QLabel{ border-image: url(/home/st/grabrb_ui/photo/unknown.jpg); }");
-    ui->DownImg_label->setStyleSheet("QLabel{ border-image: url(/home/st/grabrb_ui/photo/unknown.jpg); }");
-    ui->LeftImg_label->setStyleSheet("QLabel{ border-image: url(/home/st/grabrb_ui/photo/unknown.jpg); }");
-    ui->FrontImg_label->setStyleSheet("QLabel{ border-image: url(/home/st/grabrb_ui/photo/unknown.jpg); }");
-    ui->BackImg_label->setStyleSheet("QLabel{ border-image: url(/home/st/grabrb_ui/photo/unknown.jpg); }");
+    ui->cubeModeBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/photo/cube.jpg); }");
+    ui->RightImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
+    ui->UpImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
+    ui->DownImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
+    ui->LeftImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
+    ui->FrontImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
+    ui->BackImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
 }
 
 void cubeWidget::rosInit()

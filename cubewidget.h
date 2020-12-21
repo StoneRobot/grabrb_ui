@@ -21,11 +21,6 @@
 
 #include "hirop_msgs/taskInputCmd.h"
 
-
-
-
-
-
 namespace Ui {
 class cubeWidget;
 }
@@ -42,7 +37,7 @@ public:
 
 private:
 
-    //ROS节点指针
+    //ros节点指针
     ros::NodeHandle *Node;
 
     //ros发布端、订阅端、服务客户端
