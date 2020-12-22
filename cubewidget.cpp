@@ -20,7 +20,6 @@ cubeWidget::~cubeWidget()
 void cubeWidget::signalAndSlot()
 {
     //绑定信号与槽
-    //connect(ui->loadCubeSolveFsm, SIGNAL(clicked(bool)), this, SLOT(on_loadCubeSolveFsm_clicked()));
     connect(ui->collectButton, SIGNAL(clicked(bool)), this, SLOT(slot_collectButton_clicked()));
     connect(ui->solveButton, SIGNAL(clicked(bool)), this, SLOT(slot_solveButton_clicked()));
     connect(ui->excuteButton, SIGNAL(clicked(bool)), this, SLOT(slot_excuteButton_clicked()));
@@ -71,9 +70,9 @@ void cubeWidget::slot_excuteButton_clicked()
 
 void cubeWidget::slot_automaticButton_clicked()
 {
-        std::cout << "还原魔方中..." << std::endl;
-        std::vector<std::string> parma={"1"};
-        taskServerCmd("photo", "auto", parma);
+    std::cout << "还原魔方中..." << std::endl;
+    std::vector<std::string> parma={"1"};
+    taskServerCmd("photo", "auto", parma);
 }
 
 
@@ -132,8 +131,8 @@ int cubeWidget::taskServerCmd(const std::string& behavior, const std::string& ne
 
 void cubeWidget::slot_prepareButton_clicked()
 {
-        std::cout << "prepare" << std::endl;
-        taskServerCmd("toHome", "prepare");
+    std::cout << "prepare" << std::endl;
+    taskServerCmd("toHome", "prepare");
 }
 
 void cubeWidget::slot_placeCubeButton_clicked()
@@ -149,7 +148,4 @@ void cubeWidget::slot_resetButton_clicked()
     taskServerCmd("reset", "reset");
 }
 
-void cubeWidget::on_loadCubeSolveFsm_clicked()
-{
 
-}

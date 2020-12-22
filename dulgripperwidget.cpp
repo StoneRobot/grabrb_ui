@@ -22,7 +22,6 @@ dulgripperWidget::~dulgripperWidget()
 void dulgripperWidget::signalAndSlot()
 {
     //绑定信号与槽
-//    connect(ui->loadDulGripperFsm, SIGNAL(clicked(bool)), this, SLOT(on_loadDulGripperFsm_clicked()));
     connect(ui->prepareButton, SIGNAL(clicked(bool)), this, SLOT(slot_prepareButton_clicked()));
     connect(ui->gripButton, SIGNAL(clicked(bool)), this,SLOT(slot_gripButton_clicked()));
     connect(ui->stopButton, SIGNAL(clicked(bool)), this, SLOT(slot_stopButton_clicked()));
@@ -144,10 +143,7 @@ void dulgripperWidget::detectImg_callback(const sensor_msgs::Image::ConstPtr &ms
     cv::cvtColor(live, live, CV_BGR2RGB);
     if(robot_ == "1")
     {
-//        //isUpdate = true;
-
-//        //触发自定义显示图片槽函数
-//        emit displayPixmap();
+//        ui->detectImg_label->setPixmap("");
     }
     else
     {
@@ -196,10 +192,3 @@ void dulgripperWidget::slot_RevPixmap()
     ui->detectImg_label->setPixmap(tmp_pixmap);
 }
 
-void dulgripperWidget::on_loadDulGripperFsm_clicked()
-{
-    hirop_msgs::startTaskCmd srv;
-    //srv.request.
-    srv.request.taskId = 5;
-    start_task_client_.call(srv);
-}

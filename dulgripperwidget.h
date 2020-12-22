@@ -126,7 +126,6 @@ private slots:
      */
     void slot_pickModeBox_currentIndexChanged(const int &arg1);
 
-    void on_loadDulGripperFsm_clicked();
 };
 
 #endif // DULGRIPPERWIDGET_H

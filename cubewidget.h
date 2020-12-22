@@ -117,7 +117,6 @@ private slots:
 
     void slot_resetButton_clicked();
 
-    void on_loadCubeSolveFsm_clicked();
 };
 
 #endif // CUBEWIDGET_H
