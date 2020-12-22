@@ -14,12 +14,15 @@
 #include <string>
 #include <fstream>
 #include <atomic>
+#include <map>
+#include <vector>
 
 #include <ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
 #include <std_msgs/String.h>
 #include <sensor_msgs/Image.h>
 #include <hirop_msgs/taskInputCmd.h>
+#include <hirop_msgs/taskCmdRet.h>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
@@ -39,11 +42,34 @@ public:
 
 private:
 
-    //绑定信号与槽函数
+    /*
+     * @brief: 绑定信号与槽函数
+     */
     void signalAndSlot();
 
-    //控件初始化
+
+    /*
+     * @brief: 控件初始化
+     */
     void uiInit();
+
+    /*
+     * @brief: 刷新模式照片显示
+     */
+    void refreshMode(std::string mode);
+
+    /*
+     * @brief: 刷新攻击方显示
+     */
+    void refreshAttackSide(std::string attacker);
+
+
+    /*
+     * @brief: 刷新状态显示
+     */
+    void refreshState(std::string state);
+
+
 
 signals:
 
@@ -74,9 +100,14 @@ private slots:
     void slot_ResumeButton_clicked();
 
     /*
-     * @brief: 重置按钮槽函数
+     * @brief: 重新开始棋局按钮槽函数
      */
     void slot_RestartButton_clicked();
+
+    /*
+     * @brief: 重置按钮槽函数
+     */
+    void slot_ResetButton_clicker();
 
     /*
      * @brief: 先手方组合框槽函数
@@ -105,6 +136,7 @@ private:
 
     //ros发布端、订阅端、服务客户端
     ros::Publisher control_pub;
+    ros::Subscriber state_sub;
     ros::Subscriber ChessBoardImg_sub;
     ros::ServiceClient hscfsm_task_client;
 
@@ -119,8 +151,11 @@ private:
     //棋盘最新照片
     cv::Mat live;
 
-    //状态运行效果图
-    QMovie *move;
+    //状态机状态数组
+    int fsm_state[5];
+    std::vector<QLabel* > stateLabels;
+
+private:
 
     /*
      * @brief: ROS端初始化
@@ -136,6 +171,11 @@ private:
      * @brief: 棋盘最新识别照片话题回调函数
      */
     void ChessBoardImg_callback(const sensor_msgs::Image::ConstPtr &msg);
+
+    /*
+     * @brief: 状态机状态订阅回调函数
+     */
+    void stateSub_callback(const std_msgs::String::ConstPtr& msg);
 
     /*
      * @brief: 状态机切换状态行为函数

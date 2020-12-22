@@ -34,7 +34,7 @@ void dulgripperWidget::signalAndSlot()
 
 void dulgripperWidget::uiInit()
 {
-    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/photo/jjj.png); }");
+    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/jjj.png); }");
     ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");

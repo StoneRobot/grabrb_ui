@@ -24,7 +24,6 @@ void cubeWidget::signalAndSlot()
     connect(ui->solveButton, SIGNAL(clicked(bool)), this, SLOT(slot_solveButton_clicked()));
     connect(ui->excuteButton, SIGNAL(clicked(bool)), this, SLOT(slot_excuteButton_clicked()));
     connect(ui->automaticButton, SIGNAL(clicked(bool)), this, SLOT(slot_automaticButton_clicked()));
-
     connect(ui->prepareButton, SIGNAL(clicked(bool)), this, SLOT(slot_prepareButton_clicked()));
     connect(ui->placeCubeButton, SIGNAL(clicked(bool)), this, SLOT(slot_placeCubeButton_clicked()));
     connect(ui->resetButton, SIGNAL(clicked(bool)), this, SLOT(slot_resetButton_clicked()));
@@ -34,13 +33,13 @@ void cubeWidget::signalAndSlot()
 
 void cubeWidget::uiInit()
 {
-    ui->cubeModeBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/photo/cube.jpg); }");
-    ui->RightImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
-    ui->UpImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
-    ui->DownImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
-    ui->LeftImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
-    ui->FrontImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
-    ui->BackImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/photo/unknown.jpg); }");
+    ui->cubeModeBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/cube.jpg); }");
+    ui->RightImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/unknown.jpg); }");
+    ui->UpImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/unknown.jpg); }");
+    ui->DownImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/unknown.jpg); }");
+    ui->LeftImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/unknown.jpg); }");
+    ui->FrontImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/unknown.jpg); }");
+    ui->BackImg_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/unknown.jpg); }");
 }
 
 void cubeWidget::rosInit()
