@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>cubeWidget</class>
+ <widget class="QWidget" name="cubeWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1202</width>
+    <height>743</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QGridLayout" name="gridLayout_6" rowstretch="3,1">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,1">
+         <item>
+          <widget class="QGroupBox" name="detectImgBox">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black
+;
+
+margin-top:0.5ex;
+
+}
+
+QGroupBox::title{
+
+subcontrol-origin:margin;
+
+subcontrol-position:top left;
+
+left:10px;
+
+margin-left:0px;
+
+padding:0 1px;
+
+}</string>
+           </property>
+           <property name="title">
+            <string>魔方识别图：</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="RightImg_label">
+                <property name="text">
+                 <string>Right</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="FrontImg_label">
+                <property name="text">
+                 <string>Front</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLabel" name="BackImg_label">
+                <property name="text">
+                 <string>Back</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="UpImg_label">
+                <property name="text">
+                 <string>Up</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="DownImg_label">
+                <property name="text">
+                 <string>Down</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="LeftImg_label">
+                <property name="text">
+                 <string>Left</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="cubeModeBox">
+           <property name="styleSheet">
+            <string notr="true">QGroupBox{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black
+;
+
+margin-top:0.5ex;
+
+}
+
+QGroupBox::title{
+
+subcontrol-origin:margin;
+
+subcontrol-position:top left;
+
+left:10px;
+
+margin-left:0px;
+
+padding:0 1px;
+
+}</string>
+           </property>
+           <property name="title">
+            <string>操作选项框</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,0,0,0,0,0,0,0">
+              <item row="1" column="0">
+               <widget class="QPushButton" name="collectButton">
+                <property name="text">
+                 <string>采集魔方数据</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="prepareButton">
+                <property name="text">
+                 <string>准备</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="solveButton">
+                <property name="text">
+                 <string>魔方解算</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
+               <widget class="QPushButton" name="resetButton">
+                <property name="text">
+                 <string>重置</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QPushButton" name="automaticButton">
+                <property name="text">
+                 <string>全自动</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QPushButton" name="excuteButton">
+                <property name="text">
+                 <string>执行解算</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QPushButton" name="placeCubeButton">
+                <property name="text">
+                 <string>放下魔方</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="colorSerialBox">
+         <property name="styleSheet">
+          <string notr="true">QGroupBox{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black
+;
+
+margin-top:0.5ex;
+
+}
+
+QGroupBox::title{
+
+subcontrol-origin:margin;
+
+subcontrol-position:top left;
+
+left:10px;
+
+margin-left:0px;
+
+padding:0 1px;
+
+}</string>
+         </property>
+         <property name="title">
+          <string>颜色识别结果：</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,1">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="QLineEdit" name="RightlineEdit">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;魔方右面&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::RightToLeft</enum>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="dragEnabled">
+                 <bool>false</bool>
+                </property>
+                <property name="readOnly">
+                 <bool>false</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>魔方右面</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="UplineEdit">
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="placeholderText">
+                 <string>魔方顶面</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="DownlineEdit">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="placeholderText">
+                 <string>魔方底面</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="LeftlineEdit">
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="placeholderText">
+                 <string>魔方左面</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="FrontlineEdit">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="placeholderText">
+                 <string>魔方正面</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="BacklineEdit">
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="placeholderText">
+                 <string>魔方背面</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="Button">
+              <property name="text">
+               <string>重新解算</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="value">
+        <number>24</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
