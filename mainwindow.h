@@ -31,6 +31,9 @@ public:
 
 private:
     void rosInit();
+    void initMonitorLabel();
+    void monitorTimerCB(const ros::TimerEvent& event);
+    void setLabel(QLabel* label, bool status);
 
 private slots:
 
@@ -46,13 +49,19 @@ private slots:
 
     void on_btn_tabmain_close_clicked();
 
-
 private:
 
     //ROS节点指针
     ros::NodeHandle *Node;
 
     ros::ServiceClient start_task_client_;
+    ros::Timer monitor_timer_;
+
+    std::vector<std::string> node_list;
+    std::vector<std::string> topic_list;
+    std::map<std::string, QLabel*> map_node_label_;
+    std::map<std::string, QLabel*> map_topic_label_;
+
 
     //界面窗口指针
     Ui::MainWindow *ui;
