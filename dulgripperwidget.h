@@ -17,9 +17,11 @@
 #include <opencv2/core/core.hpp>
 
 #include <std_srvs/Trigger.h>
+#include <std_msgs/String.h>
 
 #include "hirop_msgs/taskInputCmd.h"
 #include "hirop_msgs/startTaskCmd.h"
+#include "hirop_msgs/taskCmdRet.h"
 
 
 namespace Ui {
@@ -47,6 +49,7 @@ private:
     ros::ServiceClient hscfsm_task_client_;
     ros::ServiceClient stop_pick_client_;
     ros::ServiceClient start_task_client_;
+    ros::Subscriber fsm_task_sub_;
 
     //抓取设置参数
     std::string robot_ = "0";
@@ -57,10 +60,17 @@ private:
 
     cv::Mat live;
 
+    std::vector<std::string> fsm_task_;
+    std::map<std::string, QLabel*> dul_label_;
+
+    void fsmTaskSubCB(const std_msgs::StringConstPtr& msg);
+    void setLabelShowdual(QLabel *label, std::string color);
+    void connetTaskLabel();
 signals:
 
     //自定义显示图片信号
     void displayPixmap();
+
 
 private:
 

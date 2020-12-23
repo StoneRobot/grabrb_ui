@@ -342,11 +342,7 @@ void gobangWidget::ChessBoardImg_callback(const sensor_msgs::Image::ConstPtr &ms
 void gobangWidget::stateSub_callback(const std_msgs::String::ConstPtr& msg)
 {
     std::string result = msg->data.c_str();
-//    if(result == "init" || result == "run" || result == "stop" || result == "error" || result == "exit")
-//    {
-        refreshState(result);
-//        return;
-//    }
+    refreshState(result);
 }
 
 void gobangWidget::attackerSub_callback(const std_msgs::Int16::ConstPtr &msg)

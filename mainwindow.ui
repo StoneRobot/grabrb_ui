@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>878</width>
+    <width>911</width>
     <height>699</height>
    </rect>
   </property>
@@ -159,7 +159,7 @@ padding:0 1px;
                       </widget>
                      </item>
                      <item row="0" column="4">
-                      <widget class="QLabel" name="label_tabmain_gripperConn">
+                      <widget class="QLabel" name="label_tabmain_vision_bridge_left">
                        <property name="text">
                         <string>视觉桥节点（左）</string>
                        </property>
@@ -201,7 +201,7 @@ padding:0 1px;
                       </widget>
                      </item>
                      <item row="1" column="4">
-                      <widget class="QLabel" name="label_tabmain_pickPlaceBridge">
+                      <widget class="QLabel" name="label_tabmain_vision_bridge_right">
                        <property name="text">
                         <string>视觉桥节点（右）</string>
                        </property>

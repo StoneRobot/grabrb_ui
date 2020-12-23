@@ -17,6 +17,8 @@ cubeWidget::~cubeWidget()
     delete ui;
 }
 
+
+
 void cubeWidget::signalAndSlot()
 {
     //绑定信号与槽

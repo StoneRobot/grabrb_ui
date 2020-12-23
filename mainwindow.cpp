@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent, ros::NodeHandle *node) :
     //添加dulgripperwidget子类窗口
     dgw = new dulgripperWidget(this, Node);
     ui->tabWidget->addTab(dgw, QString("DualGripper"));
-
+    initMonitorLabel();
     rosInit();
 }
 
@@ -35,49 +35,77 @@ MainWindow::~MainWindow()
 void MainWindow::rosInit()
 {
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
-    left_robot_state_sub_ = Node->subscribe("/UR51/robot_status", 10, &MainWindow::leftRobotStateSubCB, this);
-    right_robot_state_sub_ = Node->subscribe("/UR51/robot_status", 10, &MainWindow::rightRobotStateSubCB, this);
+    monitor_timer_ = Node->createTimer(ros::Duration(1.1), &MainWindow::monitorTimerCB, this);
+    monitor_timer_.stop();
 }
 
-void MainWindow::leftRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg)
+void MainWindow::monitorTimerCB(const ros::TimerEvent &event)
 {
-//    if (msg->in_error.val == 0)
-//    {
-
-//    }
-//    else
-//    {
-
-//    }
-//    if (msg->drives_powered.val == 1)
-//    {
-
-//    }
-//    else
-//    {
-
-//    }
+    std::string prefix = "/status";
+    std::string param_name;
+    bool status;
+    for(auto i: node_list)
+    {
+        param_name = prefix + i;
+        Node->getParam(param_name, status);
+        setLabel(map_node_label_[i], status);
+    }
+    for(auto j: topic_list)
+    {
+        param_name = prefix + j;
+        Node->getParam(param_name, status);
+        setLabel(map_topic_label_[j], status);
+    }
 }
 
-void MainWindow::rightRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg)
+void MainWindow::setLabel(QLabel* label, bool status)
 {
-//    if (msg->in_error.val == 0)
-//    {
-
-//    }
-//    else
-//    {
-
-//    }
-//    if (msg->drives_powered.val == 1)
-//    {
-
-//    }
-//    else
-//    {
-
-//    }
+    QPalette palette;
+    if(status)
+    {
+        palette.setColor(QPalette::Background, QColor(0, 255, 0));
+//        label->setStyleSheet("QLabel{background-color:rgb(0,255,0);}");
+    }
+    else if(!status)
+    {
+        palette.setColor(QPalette::Background, QColor(255, 0, 0));
+//        label->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
+    }
+    label->setAutoFillBackground(true);  //一定要这句，否则不行
+    label->setPalette(palette);
 }
+
+void MainWindow::initMonitorLabel()
+{
+//    Node->getParam("/status/node_list", node_list);
+    node_list = {"/UR51/gripper_bridge", "/UR52/gripper_bridge", "/UR51/vision_bridge", "/UR52/vision_bridge",
+                 "/pickplace_bridge0", "/pickplace_bridge1", "/dm_bridge", "/hscfsm_bridge", "/cube_bridge",
+                 "/motion_bridge", "/perception_bridge"};
+    map_node_label_[node_list[0]] = ui->label_tabmain_gripper_node_left;
+    map_node_label_[node_list[1]] = ui->label_tabmain_gripper_node_right;
+    map_node_label_[node_list[2]] = ui->label_tabmain_vision_bridge_left;
+    map_node_label_[node_list[3]] = ui->label_tabmain_vision_bridge_right;
+    map_node_label_[node_list[4]] = ui->label_tabmain_pickPlaceBridge_left;
+    map_node_label_[node_list[5]] = ui->label_tabmain_pickPlaceBridge_right;
+    map_node_label_[node_list[6]] = ui->label_tabmain_dmBridge;
+    map_node_label_[node_list[7]] = ui->label_tabmain_hscfsm;
+    map_node_label_[node_list[8]] = ui->label_tabmain_cube_bridge;
+    map_node_label_[node_list[9]] = ui->label_tabmain_motionBridge;
+    map_node_label_[node_list[10]] = ui->label_tabmain_perceptionBridge;
+
+//    Node->getParam("/status/topic_list", topic_list);
+    topic_list = {"/camera_base_left/color/camera_info", "/camera_base_right/color/camera_info", "/left_robot_connet",
+                  "/left_robot_error", "/left_robot_power", "/right_robot_connet", "/right_robot_error", "/right_robot_power"};
+    map_topic_label_[topic_list[0]] = ui->label_tabmain_d435i_left;
+    map_topic_label_[topic_list[1]] = ui->label_tabmain_d435i_right;
+    map_topic_label_[topic_list[2]] = ui->label_tabmain_rbConn_left;
+    map_topic_label_[topic_list[3]] = ui->label_tabmain_rbIsWell_left;
+    map_topic_label_[topic_list[4]] = ui->label_tabmain_rbEnable_left;
+    map_topic_label_[topic_list[5]] = ui->label_tabmain_rbConn_right;
+    map_topic_label_[topic_list[6]] = ui->label_tabmain_rbIsWell_right;
+    map_topic_label_[topic_list[7]] = ui->label_tabmain_rbEnable_rihgt;
+}
+
 
 void MainWindow::on_btn_tabmain_loadFsm_clicked()
 {
@@ -123,8 +151,10 @@ void MainWindow::on_btn_tabmain_devConn_clicked()
     ui->btn_tabmain_devConn->setEnabled(false);
     std::thread t([&]{
         system("rosrun hscfsm_bridge bring_up_1.sh");
-        sleep(3);
-        ui->btn_tabmain_devConn->setEnabled(true);
+        if(!monitor_timer_.hasStarted())
+        {
+            monitor_timer_.start();
+        }
     });
     t.detach();
 }
@@ -150,11 +180,12 @@ void MainWindow::on_btn_tabmain_sysReset_clicked()
 {
     ui->btn_tabmain_sysReset->setEnabled(false);
     std::thread t([&]{
-       system("rosnode kill $(rosnode list | grep -v Gomoku_UI) &") ;
+       system("rosnode kill $(rosnode list | grep -v Gomoku_UI | grep -v status_monitor) &") ;
        sleep(5);
        system("rosrun hscfsm_bridge kill_all_node.sh");
        sleep(2);
        ui->btn_tabmain_sysReset->setEnabled(true);
+       ui->btn_tabmain_devConn->setEnabled(true);
     });
     t.detach();
 

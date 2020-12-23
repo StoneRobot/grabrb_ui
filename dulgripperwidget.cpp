@@ -35,13 +35,13 @@ void dulgripperWidget::signalAndSlot()
 void dulgripperWidget::uiInit()
 {
     ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/jjj.png); }");
-    ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->pick_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->place_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->error_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->exit_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+//    ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+//    ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+//    ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+//    ui->pick_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+//    ui->place_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+//    ui->error_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+//    ui->exit_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
 }
 
 
@@ -51,6 +51,48 @@ void dulgripperWidget::rosInit()
     hscfsm_task_client_ = Node->serviceClient<hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
     stop_pick_client_ = Node->serviceClient<std_srvs::Trigger>("stop_pick");
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
+    fsm_task_sub_ = Node->subscribe("/fsm_state", 10, &dulgripperWidget::fsmTaskSubCB, this);
+}
+
+void dulgripperWidget::fsmTaskSubCB(const std_msgs::StringConstPtr& msg)
+{
+    for(auto i: fsm_task_)
+    {
+        setLabelShowdual(dul_label_[i], "grey");
+    }
+    std::cout << "status: >>>>>" << msg->data << std::endl;
+    setLabelShowdual(dul_label_[msg->data], "yellow");
+}
+
+void dulgripperWidget::connetTaskLabel()
+{
+    fsm_task_={"init", "prepare", "detection" "pick", "place", "error", "exit"};
+    dul_label_[fsm_task_[0]] = ui->init_label;
+    dul_label_[fsm_task_[1]] = ui->prepare_label;
+    dul_label_[fsm_task_[2]] = ui->detection_label;
+    dul_label_[fsm_task_[3]] = ui->pick_label;
+    dul_label_[fsm_task_[4]] = ui->place_label;
+    dul_label_[fsm_task_[5]] = ui->error_label;
+    dul_label_[fsm_task_[6]] = ui->exit_label;
+}
+
+void dulgripperWidget::setLabelShowdual(QLabel *label, std::string color)
+{
+    QPalette palette;
+    if (color == "red")
+    {
+        palette.setColor(QPalette::Background, QColor(255, 0, 0));
+    }
+    else if (color == "yellow")
+    {
+        palette.setColor(QPalette::Background, QColor(255, 255, 0));
+    }
+    else if (color == "grey")
+    {
+        palette.setColor(QPalette::Background, QColor(192, 192, 192));
+    }
+    label->setAutoFillBackground(true);
+    label->setPalette(palette);
 }
 
 
@@ -59,7 +101,6 @@ void dulgripperWidget::slot_prepareButton_clicked()
     ui->prepareButton->setEnabled(false);
     std::cout << "準備" << std::endl;
     taskServerCmd("prepare", "prepare");
-    usleep(1000*10);
     ui->prepareButton->setEnabled(true);
 }
 
@@ -69,7 +110,6 @@ void dulgripperWidget::slot_gripButton_clicked()
     std::cout << "開始抓取" << std::endl;
     std::vector<std::string> params = {robot_, pick_mode_};
     taskServerCmd("starting", "detection", params);
-    usleep(1000*10);
     ui->gripButton->setEnabled(true);
 }
 
