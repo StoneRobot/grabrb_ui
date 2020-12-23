@@ -35,49 +35,10 @@ MainWindow::~MainWindow()
 void MainWindow::rosInit()
 {
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
-    left_robot_state_sub_ = Node->subscribe("/UR51/robot_status", 10, &MainWindow::leftRobotStateSubCB, this);
-    right_robot_state_sub_ = Node->subscribe("/UR51/robot_status", 10, &MainWindow::rightRobotStateSubCB, this);
 }
 
-void MainWindow::leftRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg)
-{
-    if (msg->in_error.val == 0)
-    {
 
-    }
-    else
-    {
 
-    }
-    if (msg->drives_powered.val == 1)
-    {
-
-    }
-    else
-    {
-
-    }
-}
-
-void MainWindow::rightRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg)
-{
-    if (msg->in_error.val == 0)
-    {
-
-    }
-    else
-    {
-
-    }
-    if (msg->drives_powered.val == 1)
-    {
-
-    }
-    else
-    {
-
-    }
-}
 
 void MainWindow::on_btn_tabmain_loadFsm_clicked()
 {

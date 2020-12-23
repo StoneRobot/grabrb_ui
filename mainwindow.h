@@ -46,18 +46,11 @@ private slots:
 
     void on_btn_tabmain_close_clicked();
 
-private:
-    void leftRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg);
-    void rightRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg);
 
 private:
 
     //ROS节点指针
     ros::NodeHandle *Node;
-
-    ros::Subscriber left_robot_state_sub_;
-    ros::Subscriber right_robot_state_sub_;
-
 
     ros::ServiceClient start_task_client_;
 
