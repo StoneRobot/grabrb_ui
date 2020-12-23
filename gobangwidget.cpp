@@ -18,6 +18,16 @@ gobangWidget::~gobangWidget()
 }
 
 
+void gobangWidget::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    //刷新棋局图片的大小
+    ui->ChessBoardLabel->resize(ui->chessBoard_widget->size());
+    ui->ChessBoardLabel->setScaledContents(true);
+}
+
+
 void gobangWidget::signalAndSlot()
 {
     //绑定信号与槽
@@ -39,12 +49,6 @@ void gobangWidget::uiInit()
     ui->ModegroupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/hhh.jpg); }");
     ui->ChessBoardLabel->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/ChessDemo.png); }");
 
-    ui->State_Init->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->State_Run->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->State_Stop->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->State_Error->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-    ui->State_Exit->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-
     ui->white_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/question.jpg); }");
     ui->black_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/question.jpg); }");
 
@@ -56,13 +60,19 @@ void gobangWidget::uiInit()
     stateLabels.push_back(ui->State_Error);
     stateLabels.push_back(ui->State_Exit);
 
+    //设置状态颜色
+    for (size_t i = 0; i < stateLabels.size(); i++)
+    {
+        setLabelShow(stateLabels[i], "grey");
+    }
 }
 
 
 void gobangWidget::RosInit()
 {
     control_pub = Node->advertise <std_msgs::String>("/GobangGame/ControlSignal", 100);
-    state_sub = Node->subscribe <std_msgs::String>("/GobangGame/GameMode", 1, &gobangWidget::stateSub_callback, this);
+    state_sub = Node->subscribe <std_msgs::String>("/GobangGame/GameParam", 1, &gobangWidget::stateSub_callback, this);
+    attacker_sub = Node->subscribe <std_msgs::Int16>("/GobangGame/GameAttack", 1, &gobangWidget::attackerSub_callback, this);
     ChessBoardImg_sub = Node->subscribe <sensor_msgs::Image>("/GobangVision/ChessBoardDetection", 1, &gobangWidget::ChessBoardImg_callback, this);
     hscfsm_task_client = Node->serviceClient <hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
 }
@@ -75,8 +85,10 @@ void gobangWidget::slot_RevPixmap()
     QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
     QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
     //设置在对应label中显示
+//    ui->ChessBoardLabel->resize(ui->chessBoard_widget->size());
+//    ui->ChessBoardLabel->setScaledContents(true);
     ui->ChessBoardLabel->setPixmap(tmp_pixmap);
-    ui->ChessBoardLabel->setScaledContents(true);
+
 }
 
 
@@ -141,8 +153,6 @@ void gobangWidget::slot_RestartButton_clicked()
     //发送重置信号
     pub_control_signal("end");
 
-    //棋局重置后重新使能先手方选项
-    ui->FirstRoundBox->setEnabled(true);
 }
 
 void gobangWidget::slot_ConfirmButtton_clicked()
@@ -158,11 +168,18 @@ void gobangWidget::slot_ResetButton_clicker()
 
     //恢复开始按钮
     ui->StartButton->setEnabled(true);
-}
 
+    //重新使能先手方选项
+    ui->FirstRoundBox->setEnabled(true);
+
+    setLabelShow(ui->whiteAttack_label, "grey");
+    setLabelShow(ui->blackAttack_label, "grey");
+}
 
 void gobangWidget::slot_FirstRoundBox_currentIndexChanged(const int &arg1)
 {
+    Q_UNUSED(arg1);
+
     //接收设置棋局先手方
     firstRound = ui->FirstRoundBox->currentText().toStdString().data();
     std::cout << "先手方设置为: " << firstRound << std::endl;
@@ -171,6 +188,8 @@ void gobangWidget::slot_FirstRoundBox_currentIndexChanged(const int &arg1)
 
 void gobangWidget::slot_ModeBox_currentIndexChanged(const int &arg1)
 {
+    Q_UNUSED(arg1);
+
     //接收设置棋局模式
     mode = ui->ModeBox->currentText().toStdString().data();
     if (mode == "MODE")
@@ -178,7 +197,6 @@ void gobangWidget::slot_ModeBox_currentIndexChanged(const int &arg1)
         QMessageBox::information(this, "Warn", QString::fromLocal8Bit("请正确选择模式"));
         return;
     }
-
     std::cout << "模式设置为: " << mode << std::endl;
 }
 
@@ -253,13 +271,46 @@ void gobangWidget::refreshState(std::string state)
     for (int i = 0; i < 5; i++)
     {
         if (fsm_state[i] == 1)
-            stateLabels[i]->setStyleSheet("QLabel{ background-color: rgb(255, 255, 0); }");
+            setLabelShow(stateLabels[i], "yellow");
         else
-            stateLabels[i]->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+            setLabelShow(stateLabels[i], "grey");
     }
 }
 
+void gobangWidget::refreshAttackSide(int attacker)
+{
+    if (attacker == 1)
+    {
+        setLabelShow(ui->whiteAttack_label, "red");
+        setLabelShow(ui->blackAttack_label, "grey");
+    }
+    else if (attacker == -1)
+    {
+        setLabelShow(ui->whiteAttack_label, "grey");
+        setLabelShow(ui->blackAttack_label, "red");
+    }
+}
 
+void gobangWidget::setLabelShow(QLabel *label, std::string color)
+{
+    if (color == "red")
+    {
+        label->setStyleSheet("QLabel{ background-color: rgb(255, 0, 0); }");
+        return;
+    }
+
+    else if (color == "yellow")
+    {
+        label->setStyleSheet("QLabel{ background-color: rgb(255, 255, 0); }");
+        return;
+    }
+
+    else if (color == "grey")
+    {
+        label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+        return;
+    }
+}
 
 
 
@@ -279,7 +330,7 @@ void gobangWidget::pub_control_signal(std::string order)
 
 void gobangWidget::ChessBoardImg_callback(const sensor_msgs::Image::ConstPtr &msg)
 {
-    //std::cout << "进入回调函数成功" << std::endl;
+    std::cout << "进入回调函数成功" << std::endl;
     const cv_bridge::CvImageConstPtr &ptr = cv_bridge::toCvShare(msg, "bgr8");
     live = ptr->image;
     cv::cvtColor(live, live, CV_BGR2RGB);
@@ -290,8 +341,18 @@ void gobangWidget::ChessBoardImg_callback(const sensor_msgs::Image::ConstPtr &ms
 
 void gobangWidget::stateSub_callback(const std_msgs::String::ConstPtr& msg)
 {
-    //std::cout << "状态机目前状态为: " << msg->data.c_str() << std::endl;
-    refreshState(msg->data.c_str());
+    std::string result = msg->data.c_str();
+//    if(result == "init" || result == "run" || result == "stop" || result == "error" || result == "exit")
+//    {
+        refreshState(result);
+//        return;
+//    }
+}
+
+void gobangWidget::attackerSub_callback(const std_msgs::Int16::ConstPtr &msg)
+{
+    int result = msg->data;
+    refreshAttackSide(result);
 }
 
 int gobangWidget::taskServerCmd(const std::string &behavior, const std::string &next_state, const std::vector<std::string> &params)

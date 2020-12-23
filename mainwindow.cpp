@@ -41,42 +41,42 @@ void MainWindow::rosInit()
 
 void MainWindow::leftRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg)
 {
-    if (msg->in_error.val == 0)
-    {
+//    if (msg->in_error.val == 0)
+//    {
 
-    }
-    else
-    {
+//    }
+//    else
+//    {
 
-    }
-    if (msg->drives_powered.val == 1)
-    {
+//    }
+//    if (msg->drives_powered.val == 1)
+//    {
 
-    }
-    else
-    {
+//    }
+//    else
+//    {
 
-    }
+//    }
 }
 
 void MainWindow::rightRobotStateSubCB(const industrial_msgs::RobotModeConstPtr& msg)
 {
-    if (msg->in_error.val == 0)
-    {
+//    if (msg->in_error.val == 0)
+//    {
 
-    }
-    else
-    {
+//    }
+//    else
+//    {
 
-    }
-    if (msg->drives_powered.val == 1)
-    {
+//    }
+//    if (msg->drives_powered.val == 1)
+//    {
 
-    }
-    else
-    {
+//    }
+//    else
+//    {
 
-    }
+//    }
 }
 
 void MainWindow::on_btn_tabmain_loadFsm_clicked()

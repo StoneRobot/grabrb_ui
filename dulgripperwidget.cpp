@@ -187,8 +187,9 @@ void dulgripperWidget::slot_RevPixmap()
 //    isUpdate = false;
     QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
     QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
-    tmp_pixmap = tmp_pixmap.scaled(this->width() * 3/4, this->height() * 2/3, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    //tmp_pixmap = tmp_pixmap.scaled(this->width() * 3/4, this->height() * 2/3, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     ui->detectImg_label->setPixmap(tmp_pixmap);
+    ui->detectImg_label->setScaledContents(true);
 }
 
