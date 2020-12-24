@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QVariant>
 #include <QDebug>
+#include <QPainter>
 #include <QImage>
 #include <QString>
 #include <QPixmap>
@@ -20,6 +21,7 @@
 #include <ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Int16.h>
 #include <sensor_msgs/Image.h>
 #include <hirop_msgs/taskInputCmd.h>
 #include <hirop_msgs/taskCmdRet.h>
@@ -40,13 +42,15 @@ public:
 
     ~gobangWidget();
 
+protected:
+    void paintEvent(QPaintEvent *event);
+
 private:
 
     /*
      * @brief: 绑定信号与槽函数
      */
     void signalAndSlot();
-
 
     /*
      * @brief: 控件初始化
@@ -61,13 +65,17 @@ private:
     /*
      * @brief: 刷新攻击方显示
      */
-    void refreshAttackSide(std::string attacker);
-
+    void refreshAttackSide(int attacker);
 
     /*
      * @brief: 刷新状态显示
      */
     void refreshState(std::string state);
+
+    /*
+     * @brief: 设置QLabel状态
+     */
+    void setLabelShow(QLabel* label, std::string color);
 
 
 
@@ -137,6 +145,7 @@ private:
     //ros发布端、订阅端、服务客户端
     ros::Publisher control_pub;
     ros::Subscriber state_sub;
+    ros::Subscriber attacker_sub;
     ros::Subscriber ChessBoardImg_sub;
     ros::ServiceClient hscfsm_task_client;
 
@@ -178,7 +187,12 @@ private:
     void stateSub_callback(const std_msgs::String::ConstPtr& msg);
 
     /*
-     * @brief: 切换状态机状态行为函数
+     * @brief: 当前棋局攻击方订阅回调函数
+     */
+    void attackerSub_callback(const std_msgs::Int16::ConstPtr& msg);
+
+    /*
+     * @brief: 状态机切换状态行为函数
      */
     int taskServerCmd(const std::string& behavior, const std::string& next_state,
                       const std::vector<std::string>& params=std::vector<std::string>());

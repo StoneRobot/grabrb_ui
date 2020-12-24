@@ -79,12 +79,18 @@ margin-top:0.5ex;
               <property name="text">
                <string>初始状态</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="State_Run">
               <property name="text">
                <string>对战状态</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -93,12 +99,8 @@ margin-top:0.5ex;
               <property name="text">
                <string>暂停状态</string>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="State_Exit">
-              <property name="text">
-               <string>退出状态</string>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -106,6 +108,19 @@ margin-top:0.5ex;
              <widget class="QLabel" name="State_Error">
               <property name="text">
                <string>异常状态</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="State_Exit">
+              <property name="text">
+               <string>退出状态</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -152,7 +167,7 @@ padding:0 1px;
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout">
+             <layout class="QVBoxLayout" name="verticalLayout" stretch="8,1,8,1">
               <item>
                <widget class="QGroupBox" name="whiteBox">
                 <property name="title">
@@ -170,6 +185,35 @@ padding:0 1px;
                </widget>
               </item>
               <item>
+               <widget class="QLabel" name="whiteAttack_label">
+                <property name="styleSheet">
+                 <string notr="true">QLabel{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black
+;
+
+margin-top:0.5ex;
+
+}</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::Box</enum>
+                </property>
+                <property name="text">
+                 <string>下棋中...</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QGroupBox" name="blackBox">
                 <property name="title">
                  <string>黑棋方</string>
@@ -180,9 +224,41 @@ padding:0 1px;
                    <property name="text">
                     <string/>
                    </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
                   </widget>
                  </item>
                 </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="blackAttack_label">
+                <property name="styleSheet">
+                 <string notr="true">QLabel{
+
+border-width:2px;
+
+border-style:solid;
+
+border-radius: 10px;
+
+border-color:black
+;
+
+margin-top:0.5ex;
+
+}</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::Panel</enum>
+                </property>
+                <property name="text">
+                 <string>下棋中...</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
                </widget>
               </item>
              </layout>
@@ -190,10 +266,26 @@ padding:0 1px;
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="QLabel" name="ChessBoardLabel">
-                <property name="text">
-                 <string/>
-                </property>
+               <widget class="QWidget" name="chessBoard_widget" native="true">
+                <widget class="QLabel" name="ChessBoardLabel">
+                 <property name="geometry">
+                  <rect>
+                   <x>9</x>
+                   <y>9</y>
+                   <width>16</width>
+                   <height>19</height>
+                  </rect>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
                </widget>
               </item>
               <item>

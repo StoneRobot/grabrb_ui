@@ -45,6 +45,7 @@ void MainWindow::rosInit()
 {
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
     monitor_timer_ = Node->createTimer(ros::Duration(1.1), &MainWindow::monitorTimerCB, this);
+    monitor_timer_.stop();
 }
 
 void MainWindow::monitorTimerCB(const ros::TimerEvent &event)
@@ -160,6 +161,10 @@ void MainWindow::on_btn_tabmain_devConn_clicked()
     ui->btn_tabmain_devConn->setEnabled(false);
     std::thread t([&]{
         system("rosrun hscfsm_bridge bring_up_1.sh");
+        if(!monitor_timer_.hasStarted())
+        {
+            monitor_timer_.start();
+        }
     });
     t.detach();
 }
@@ -185,7 +190,7 @@ void MainWindow::on_btn_tabmain_sysReset_clicked()
 {
     ui->btn_tabmain_sysReset->setEnabled(false);
     std::thread t([&]{
-       system("rosnode kill $(rosnode list | grep -v Gomoku_UI) &") ;
+       system("rosnode kill $(rosnode list | grep -v Gomoku_UI | grep -v status_monitor) &") ;
        sleep(5);
        system("rosrun hscfsm_bridge kill_all_node.sh");
        sleep(2);

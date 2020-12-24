@@ -8,7 +8,7 @@ dulgripperWidget::dulgripperWidget(QWidget *parent, ros::NodeHandle *node) :
     ui(new Ui::dulgripperWidget)
 {
     ui->setupUi(this);
-
+    connetTaskLabel();
     signalAndSlot();
     uiInit();
     rosInit();
@@ -61,6 +61,48 @@ void dulgripperWidget::rosInit()
     hscfsm_task_client_ = Node->serviceClient<hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
     stop_pick_client_ = Node->serviceClient<std_srvs::Trigger>("stop_pick");
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
+    fsm_task_sub_ = Node->subscribe("/fsm_state", 10, &dulgripperWidget::fsmTaskSubCB, this);
+}
+
+void dulgripperWidget::fsmTaskSubCB(const std_msgs::StringConstPtr& msg)
+{
+    for(auto i: fsm_task_)
+    {
+        setLabelShowdual(dul_label_[i], "grey");
+    }
+    std::cout << "status: >>>>>" << msg->data << std::endl;
+    setLabelShowdual(dul_label_[msg->data], "yellow");
+}
+
+void dulgripperWidget::connetTaskLabel()
+{
+    fsm_task_={"init", "prepare", "detection", "pick", "place", "error", "exit"};
+    dul_label_[fsm_task_[0]] = ui->init_label;
+    dul_label_[fsm_task_[1]] = ui->prepare_label;
+    dul_label_[fsm_task_[2]] = ui->detection_label;
+    dul_label_[fsm_task_[3]] = ui->pick_label;
+    dul_label_[fsm_task_[4]] = ui->place_label;
+    dul_label_[fsm_task_[5]] = ui->error_label;
+    dul_label_[fsm_task_[6]] = ui->exit_label;
+}
+
+void dulgripperWidget::setLabelShowdual(QLabel *label, std::string color)
+{
+    QPalette palette;
+    if (color == "red")
+    {
+        palette.setColor(QPalette::Background, QColor(255, 0, 0));
+    }
+    else if (color == "yellow")
+    {
+        palette.setColor(QPalette::Background, QColor(255, 255, 0));
+    }
+    else if (color == "grey")
+    {
+        palette.setColor(QPalette::Background, QColor(192, 192, 192));
+    }
+    label->setAutoFillBackground(true);
+    label->setPalette(palette);
 }
 
 
@@ -69,7 +111,6 @@ void dulgripperWidget::slot_prepareButton_clicked()
     ui->prepareButton->setEnabled(false);
     std::cout << "準備" << std::endl;
     taskServerCmd("prepare", "prepare");
-    usleep(1000*10);
     ui->prepareButton->setEnabled(true);
 }
 
@@ -79,7 +120,6 @@ void dulgripperWidget::slot_gripButton_clicked()
     std::cout << "開始抓取" << std::endl;
     std::vector<std::string> params = {robot_, pick_mode_};
     taskServerCmd("starting", "detection", params);
-    usleep(1000*10);
     ui->gripButton->setEnabled(true);
 }
 
@@ -200,3 +240,22 @@ int dulgripperWidget::taskServerCmd(const std::string& behavior, const std::stri
     return -1;
 }
 
+<<<<<<< HEAD
+=======
+void dulgripperWidget::slot_RevPixmap()
+{
+//    while(!isUpdate)
+//    {
+//        std::cout << "Waiting for update..." << std::endl;
+//        sleep(1);
+//    }
+//    isUpdate = false;
+    QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
+    QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
+    //tmp_pixmap = tmp_pixmap.scaled(this->width() * 3/4, this->height() * 2/3, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+    ui->detectImg_label->setPixmap(tmp_pixmap);
+    ui->detectImg_label->setScaledContents(true);
+}
+
+>>>>>>> 95c122db6ecba6656282640ac4ad43d1b3fcd091
