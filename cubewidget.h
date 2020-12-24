@@ -35,6 +35,8 @@ public:
 
     ~cubeWidget();
 
+    void setFsmState(bool isOpen);
+
 private:
 
     //ros节点指针
@@ -44,6 +46,8 @@ private:
     ros::Subscriber color_serial_sub;
     ros::Publisher update_color_serial_pub;
     ros::ServiceClient hscfsm_task_client_;
+
+    bool fsm_open_;
 
     //界面窗口指针
     Ui::cubeWidget *ui;
@@ -75,6 +79,7 @@ private:
     void ColorSerial_callback(const std_msgs::String::ConstPtr& msg);
 
     int taskServerCmd(const std::string& behavior, const std::string& next_state, const std::vector<std::string>& params=std::vector<std::string>());
+
 
 signals:
 

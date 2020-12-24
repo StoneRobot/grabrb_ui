@@ -51,6 +51,19 @@ void cubeWidget::rosInit()
 }
 
 
+void cubeWidget::setFsmState(bool isOpen)
+{
+    fsm_open_ = isOpen;
+    if(fsm_open_)
+    {
+        ui->prepareButton->setEnabled(true);
+    }
+    else
+    {
+        ui->prepareButton->setEnabled(false);
+    }
+}
+
 void cubeWidget::slot_collectButton_clicked()
 {
     std::cout << "采集魔方数据中..." <<std::endl;

@@ -39,6 +39,8 @@ public:
 
     ~dulgripperWidget();
 
+    void setFsmState(bool isOpen);
+
 private:
 
     //ros节点指针
@@ -51,6 +53,8 @@ private:
     ros::ServiceClient start_task_client_;
     ros::Subscriber fsm_task_sub_;
 
+    bool fsm_open_;
+
     //抓取设置参数
     std::string robot_ = "0";
     std::string pick_mode_ = "0";
@@ -62,6 +66,7 @@ private:
 
     std::vector<std::string> fsm_task_;
     std::map<std::string, QLabel*> dul_label_;
+
 
     void fsmTaskSubCB(const std_msgs::StringConstPtr& msg);
     void setLabelShowdual(QLabel *label, std::string color);

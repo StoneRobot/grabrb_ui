@@ -34,6 +34,7 @@ private:
     void initMonitorLabel();
     void monitorTimerCB(const ros::TimerEvent& event);
     void setLabel(QLabel* label, bool status);
+    void setFsmState(bool gobang, bool cube, bool dulgripper);
 
 private slots:
 

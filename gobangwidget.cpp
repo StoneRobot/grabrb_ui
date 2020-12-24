@@ -17,6 +17,22 @@ gobangWidget::~gobangWidget()
     delete ui;
 }
 
+void gobangWidget::setFsmState(bool isOpen)
+{
+    fsm_open_ = isOpen;
+    if(fsm_open_)
+    {
+        ui->StartButton->setEnabled(true);
+    }
+    else
+    {
+        ui->StartButton->setEnabled(false);
+//        for (size_t i = 0; i < stateLabels.size(); i++)
+//        {
+//            setLabelShow(stateLabels[i], "grey");
+//        }
+    }
+}
 
 void gobangWidget::paintEvent(QPaintEvent *event)
 {

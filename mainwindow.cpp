@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent, ros::NodeHandle *node) :
     //添加dulgripperwidget子类窗口
     dgw = new dulgripperWidget(this, Node);
     ui->tabWidget->addTab(dgw, QString("DualGripper"));
+    setFsmState(false, false, false);
     initMonitorLabel();
     rosInit();
 }
@@ -113,37 +114,66 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
     hirop_msgs::startTaskCmd srv;
     srv.request.mode = false;
     std::string fsm = ui->cbox_tabmain_chooseMode->currentText().toUtf8().data();
+    bool gobang = false;
+    bool cube = false;
+    bool dul = false;
     if(fsm == "五子棋")
     {
         srv.request.taskId = 3;
+        gobang = true;
     }
     else if(fsm == "拧魔方")
     {
         srv.request.taskId = 4;
+        cube = true;
     }
     else if(fsm == "双臂抓取")
     {
         srv.request.taskId = 5;
+        dul = true;
     }
     else
     {
         ui->btn_tabmain_loadFsm->setEnabled(true);
         return;
-
     }
     if(start_task_client_.call(srv))
     {
         std::cout << "设置" << fsm << ((srv.response.ret) ? "成功" : "失败") << std::endl;
+        if(srv.response.ret)
+        {
+            setFsmState(gobang, cube, dul);
+        }
+        else
+        {
+            setFsmState(false, false, false);
+        }
     }
     else
     {
-        std::cout << "调用状态机服务失败" << std::endl;
+        system("rosrun status_monitor cleanup.sh &");
+        system("rosrun hscfsm_bridge hscfsm_bridge &");
+        sleep((3));
+        setFsmState(gobang, cube, dul);
+        start_task_client_.call(srv);
+        ui->btn_tabmain_loadFsm->setEnabled(true);
+        return;
+//        std::cout << "调用状态机服务失败" << std::endl;
+//        setFsmState(false, false, false);
+
     }
     std::thread t([&]{
         sleep(3);
         ui->btn_tabmain_loadFsm->setEnabled(true);
     });
     t.detach();
+}
+
+void MainWindow::setFsmState(bool gobang, bool cube, bool dulgripper)
+{
+    gw->setFsmState(gobang);
+    cw->setFsmState(cube);
+    dgw->setFsmState(dulgripper);
 }
 
 void MainWindow::on_btn_tabmain_devConn_clicked()
@@ -180,6 +210,7 @@ void MainWindow::on_btn_tabmain_sysReset_clicked()
 {
     ui->btn_tabmain_sysReset->setEnabled(false);
     std::thread t([&]{
+        setFsmState(false, false, false);
        system("rosnode kill $(rosnode list | grep -v Gomoku_UI | grep -v status_monitor) &") ;
        sleep(5);
        system("rosrun hscfsm_bridge kill_all_node.sh");

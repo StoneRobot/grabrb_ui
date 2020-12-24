@@ -42,6 +42,8 @@ public:
 
     ~gobangWidget();
 
+    void setFsmState(bool isOpen);
+
 protected:
     void paintEvent(QPaintEvent *event);
 
@@ -163,6 +165,8 @@ private:
     //状态机状态数组
     int fsm_state[5];
     std::vector<QLabel* > stateLabels;
+
+    bool fsm_open_;
 
 private:
 

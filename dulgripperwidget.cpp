@@ -64,6 +64,24 @@ void dulgripperWidget::fsmTaskSubCB(const std_msgs::StringConstPtr& msg)
     setLabelShowdual(dul_label_[msg->data], "yellow");
 }
 
+void dulgripperWidget::setFsmState(bool isOpen)
+{
+    fsm_open_ = isOpen;
+    if(fsm_open_)
+    {
+        ui->prepareButton->setEnabled(true);
+    }
+    else
+    {
+        ui->prepareButton->setEnabled(false);
+//        for(auto i: fsm_task_)
+//        {
+//            setLabelShowdual(dul_label_[i], "grey");
+//        }
+    }
+
+}
+
 void dulgripperWidget::connetTaskLabel()
 {
     fsm_task_={"init", "prepare", "detection", "pick", "place", "error", "exit"};
