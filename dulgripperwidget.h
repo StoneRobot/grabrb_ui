@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QString>
 #include <QLatin1String>
+#include <QPaintEvent>
 
 
 #include <iostream>
@@ -36,6 +37,9 @@ public:
     explicit dulgripperWidget(QWidget *parent, ros::NodeHandle *node);
 
     ~dulgripperWidget();
+
+protected:
+    void paintEvent(QPaintEvent *event);
 
 private:
 

@@ -30,6 +30,7 @@ public:
     ~MainWindow();
 
 private:
+    void uiInit();
     void rosInit();
     void initMonitorLabel();
     void monitorTimerCB(const ros::TimerEvent& event);

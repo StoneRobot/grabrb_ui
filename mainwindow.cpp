@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent, ros::NodeHandle *node) :
     ui->tabWidget->addTab(dgw, QString("DualGripper"));
     initMonitorLabel();
     rosInit();
+    uiInit();
 }
 
 
@@ -32,6 +33,14 @@ MainWindow::~MainWindow()
     delete dgw;
 }
 
+void MainWindow::uiInit()
+{
+    ui->label_main_logo->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/hsicon1.jpg); }");
+    ui->gomoku_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/gomoku_icon.jpg); }");
+    ui->cube_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/cube_icon1.jpg); }");
+    ui->grab_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/grab1.jpg); }");
+}
+
 void MainWindow::rosInit()
 {
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
@@ -40,6 +49,7 @@ void MainWindow::rosInit()
 
 void MainWindow::monitorTimerCB(const ros::TimerEvent &event)
 {
+
     std::string prefix = "/status";
     std::string param_name;
     bool status;

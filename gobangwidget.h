@@ -178,7 +178,7 @@ private:
     void stateSub_callback(const std_msgs::String::ConstPtr& msg);
 
     /*
-     * @brief: 状态机切换状态行为函数
+     * @brief: 切换状态机状态行为函数
      */
     int taskServerCmd(const std::string& behavior, const std::string& next_state,
                       const std::vector<std::string>& params=std::vector<std::string>());

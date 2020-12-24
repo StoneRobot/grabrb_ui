@@ -16,27 +16,9 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <layout class="QVBoxLayout" name="vLayout_main" stretch="0,6">
+     <layout class="QVBoxLayout" name="vLayout_main" stretch="1,6">
       <item>
-       <layout class="QHBoxLayout" name="hLayout_main_11" stretch="0,0">
-        <item>
-         <widget class="QLabel" name="label_main_title">
-          <property name="font">
-           <font>
-            <pointsize>20</pointsize>
-            <weight>75</weight>
-            <italic>false</italic>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>协作机器人抓取平台</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
+       <layout class="QHBoxLayout" name="hLayout_main_11" stretch="2,3">
         <item>
          <widget class="QLabel" name="label_main_logo">
           <property name="text">
@@ -44,6 +26,34 @@
           </property>
           <property name="pixmap">
            <pixmap>../../../../../catkin_ws/src/HS_HandGrasp/handrb_ui/photo/logo.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_main_title">
+          <property name="font">
+           <font>
+            <pointsize>30</pointsize>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+            <stylestrategy>PreferAntialias</stylestrategy>
+           </font>
+          </property>
+          <property name="text">
+           <string>HIROP智能双机协作平台</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::PlainText</enum>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -62,7 +72,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <layout class="QVBoxLayout" name="vLayout_tabmain_1" stretch="2,1,2">
+             <layout class="QVBoxLayout" name="vLayout_tabmain_1" stretch="2,3,1">
               <item>
                <layout class="QHBoxLayout" name="hLayout_tabmain_11">
                 <item>
@@ -76,7 +86,7 @@ border-style:solid;
 
 border-radius: 10px;
 
-border-color:gray;
+border-color:balck;
 
 margin-top:0.5ex;
 
@@ -264,7 +274,7 @@ border-style:solid;
 
 border-radius: 10px;
 
-border-color:gray;
+border-color:black;
 
 margin-top:0.5ex;
 
@@ -321,6 +331,87 @@ padding:0 1px;
                      </item>
                     </widget>
                    </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_5" stretch="5,1">
+                     <item>
+                      <widget class="QLabel" name="gomoku_icon_label">
+                       <property name="frameShape">
+                        <enum>QFrame::Box</enum>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="gomoku_icon_text_label">
+                       <property name="frameShape">
+                        <enum>QFrame::Box</enum>
+                       </property>
+                       <property name="text">
+                        <string>五子棋</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_6" stretch="5,1">
+                     <item>
+                      <widget class="QLabel" name="cube_icon_label">
+                       <property name="frameShape">
+                        <enum>QFrame::Box</enum>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="cube_icon_text_label">
+                       <property name="frameShape">
+                        <enum>QFrame::Box</enum>
+                       </property>
+                       <property name="text">
+                        <string>魔方</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_4" stretch="5,1">
+                     <item>
+                      <widget class="QLabel" name="grab_icon_label">
+                       <property name="frameShape">
+                        <enum>QFrame::Box</enum>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="grab_icon_text_label">
+                       <property name="frameShape">
+                        <enum>QFrame::Box</enum>
+                       </property>
+                       <property name="text">
+                        <string>智能抓取</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -339,7 +430,7 @@ border-style:solid;
 
 border-radius: 10px;
 
-border-color:gray;
+border-color:black;
 
 margin-top:0.5ex;
 
