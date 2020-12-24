@@ -8,7 +8,7 @@ dulgripperWidget::dulgripperWidget(QWidget *parent, ros::NodeHandle *node) :
     ui(new Ui::dulgripperWidget)
 {
     ui->setupUi(this);
-
+    connetTaskLabel();
     signalAndSlot();
     uiInit();
     rosInit();
@@ -35,13 +35,13 @@ void dulgripperWidget::signalAndSlot()
 void dulgripperWidget::uiInit()
 {
     ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/jjj.png); }");
-//    ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-//    ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-//    ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-//    ui->pick_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-//    ui->place_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-//    ui->error_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
-//    ui->exit_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+    ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+    ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+    ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+    ui->pick_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+    ui->place_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+    ui->error_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+    ui->exit_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
 }
 
 
@@ -66,7 +66,7 @@ void dulgripperWidget::fsmTaskSubCB(const std_msgs::StringConstPtr& msg)
 
 void dulgripperWidget::connetTaskLabel()
 {
-    fsm_task_={"init", "prepare", "detection" "pick", "place", "error", "exit"};
+    fsm_task_={"init", "prepare", "detection", "pick", "place", "error", "exit"};
     dul_label_[fsm_task_[0]] = ui->init_label;
     dul_label_[fsm_task_[1]] = ui->prepare_label;
     dul_label_[fsm_task_[2]] = ui->detection_label;
