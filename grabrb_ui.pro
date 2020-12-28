@@ -37,7 +37,7 @@ INCLUDEPATH += /opt/ros/kinetic/include/opencv-3.3.1-dev/opecv \
                 /opt/ros/kinetic/include/opencv-3.3.1-dev
 LIBS +=  /opt/ros/kinetic/lib/x86_64-linux-gnu/libopencv*
 
-INCLUDEPATH += /home/st/catkin_ws/devel/include
+INCLUDEPATH += /home/fshs/catkin_ws/devel/include
 
 SOURCES += \
         main.cpp \
@@ -58,3 +58,6 @@ FORMS += \
         gobangwidget.ui \
         cubewidget.ui \
         dulgripperwidget.ui
+
+RESOURCES += \
+    photosource.qrc

@@ -17,7 +17,7 @@ cubeWidget::~cubeWidget()
     delete ui;
 }
 
-<<<<<<< HEAD
+
 void cubeWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
@@ -30,8 +30,7 @@ void cubeWidget::paintEvent(QPaintEvent *event)
     ui->FrontImg_label->resize(ui->FrontImg_widget->size());
     ui->BackImg_label->resize(ui->BackImg_widget->size());
 }
-=======
->>>>>>> 95c122db6ecba6656282640ac4ad43d1b3fcd091
+
 
 
 void cubeWidget::signalAndSlot()
@@ -62,11 +61,11 @@ void cubeWidget::uiInit()
 
     for (size_t i = 0; i < ImgLabels.size(); ++i)
     {
-        ImgLabels[i]->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/cube.jpg); }");
+        ImgLabels[i]->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/unknown.jpg); }");
         ImgLabels[i]->setScaledContents(true);
     }
 
-    ui->cubeModeBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/unknown.jpg); }");
+    ui->cubeModeBox->setStyleSheet("QGroupBox{ border-image: url(:/photosource/photo/cube.jpg); }");
 }
 
 

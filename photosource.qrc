@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/photosource">
+        <file>photo/ChessDemo.png</file>
+        <file>photo/cube.jpg</file>
+        <file>photo/cube_icon1.jpg</file>
+        <file>photo/cube_icon2.jpg</file>
+        <file>photo/cube_icon3.jpeg</file>
+        <file>photo/cube_icon3.jpg</file>
+        <file>photo/demo.gif</file>
+        <file>photo/gomoku_icon.jpg</file>
+        <file>photo/grab.jpg</file>
+        <file>photo/grab1.jpg</file>
+        <file>photo/hhh.jpg</file>
+        <file>photo/hsicon.jpeg</file>
+        <file>photo/hsicon1.jpg</file>
+        <file>photo/jjj.png</file>
+        <file>photo/people.jpg</file>
+        <file>photo/question.jpg</file>
+        <file>photo/robot.jpg</file>
+        <file>photo/robots.jpg</file>
+        <file>photo/unknown.jpg</file>
+        <file>photo/work.gif</file>
+    </qresource>
+</RCC>

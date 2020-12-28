@@ -9,16 +9,17 @@ MainWindow::MainWindow(QWidget *parent, ros::NodeHandle *node) :
 
     //添加gobangwidget子类窗口
     gw = new gobangWidget(this, Node);
-    ui->tabWidget->addTab(gw, QString("GobangWar"));
+    ui->tabWidget->addTab(gw, QString("五子棋"));
 
 
     //添加cubewidget子类窗口
     cw = new cubeWidget(this, Node);
-    ui->tabWidget->addTab(cw, QString("Cube"));
+    ui->tabWidget->addTab(cw, QString("魔方"));
 
     //添加dulgripperwidget子类窗口
     dgw = new dulgripperWidget(this, Node);
-    ui->tabWidget->addTab(dgw, QString("DualGripper"));
+    ui->tabWidget->addTab(dgw, QString("智能抓取"));
+
     initMonitorLabel();
     rosInit();
     uiInit();
@@ -35,10 +36,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::uiInit()
 {
-    ui->label_main_logo->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/hsicon1.jpg); }");
-    ui->gomoku_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/gomoku_icon.jpg); }");
-    ui->cube_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/cube_icon1.jpg); }");
-    ui->grab_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/grab1.jpg); }");
+    ui->label_main_logo->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/hsicon1.jpg); }");
+    ui->gomoku_icon_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/gomoku_icon.jpg); }");
+    ui->cube_icon_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/cube_icon1.jpg); }");
+    ui->grab_icon_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/grab1.jpg); }");
 }
 
 void MainWindow::rosInit()

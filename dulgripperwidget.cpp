@@ -44,7 +44,7 @@ void dulgripperWidget::signalAndSlot()
 
 void dulgripperWidget::uiInit()
 {
-    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/robots.jpg); }");
+    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(:/photosource/photo/robots.jpg); }");
     ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
@@ -196,13 +196,6 @@ void dulgripperWidget::slot_RevPixmap()
 
 
 
-
-
-
-
-
-
-
 void dulgripperWidget::detectImg_callback(const sensor_msgs::Image::ConstPtr &msg)
 {
     //触发自定义显示图片槽函数
@@ -240,22 +233,5 @@ int dulgripperWidget::taskServerCmd(const std::string& behavior, const std::stri
     return -1;
 }
 
-<<<<<<< HEAD
-=======
-void dulgripperWidget::slot_RevPixmap()
-{
-//    while(!isUpdate)
-//    {
-//        std::cout << "Waiting for update..." << std::endl;
-//        sleep(1);
-//    }
-//    isUpdate = false;
-    QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
-    QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
-    //tmp_pixmap = tmp_pixmap.scaled(this->width() * 3/4, this->height() * 2/3, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    ui->detectImg_label->setPixmap(tmp_pixmap);
-    ui->detectImg_label->setScaledContents(true);
-}
 
->>>>>>> 95c122db6ecba6656282640ac4ad43d1b3fcd091

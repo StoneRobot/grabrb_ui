@@ -46,11 +46,11 @@ void gobangWidget::signalAndSlot()
 void gobangWidget::uiInit()
 {
     //设定&初始化状态机各状态框
-    ui->ModegroupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/hhh.jpg); }");
-    ui->ChessBoardLabel->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/ChessDemo.png); }");
+    ui->ModegroupBox->setStyleSheet("QGroupBox{ border-image: url(:/photosource/photo/hhh.jpg); }");
+    ui->ChessBoardLabel->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/ChessDemo.png); }");
 
-    ui->white_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/question.jpg); }");
-    ui->black_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/question.jpg); }");
+    ui->white_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/question.jpg); }");
+    ui->black_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/question.jpg); }");
 
     //状态机向量&字典初始化
     std::vector<QLabel* >().swap(stateLabels);
@@ -218,36 +218,36 @@ void gobangWidget::refreshMode(std::string mode)
 {
     if (mode == "MODE")
     {
-        ui->white_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/question.jpg); }");
-        ui->black_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/question.jpg); }");
+        ui->white_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/question.jpg); }");
+        ui->black_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/question.jpg); }");
         return;
     }
 
     else if (mode == "PVP")
     {
-        ui->white_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/people.jpg); }");
-        ui->black_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/people.jpg); }");
+        ui->white_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/people.jpg); }");
+        ui->black_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/people.jpg); }");
         return;
     }
 
     else if (mode == "RVR")
     {
-        ui->white_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/robot.jpg); }");
-        ui->black_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/robot.jpg); }");
+        ui->white_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/robot.jpg); }");
+        ui->black_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/robot.jpg); }");
         return;
     }
 
     else if (mode == "PVR")
     {
-        ui->white_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/people.jpg); }");
-        ui->black_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/robot.jpg); }");
+        ui->white_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo//people.jpg); }");
+        ui->black_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/robot.jpg); }");
         return;
     }
 
     else if (mode == "RVP")
     {
-        ui->white_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/robot.jpg); }");
-        ui->black_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/people.jpg); }");
+        ui->white_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/robot.jpg); }");
+        ui->black_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/people.jpg); }");
         return;
     }
 }
