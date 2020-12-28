@@ -19,6 +19,16 @@ dulgripperWidget::~dulgripperWidget()
     delete ui;
 }
 
+void dulgripperWidget::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    //刷新显示检测图片label的尺寸
+    ui->detectImg_label->resize(ui->detectImg_widget->size());
+    ui->detectImg_label->setScaledContents(true);
+}
+
+
 void dulgripperWidget::signalAndSlot()
 {
     //绑定信号与槽
@@ -34,7 +44,7 @@ void dulgripperWidget::signalAndSlot()
 
 void dulgripperWidget::uiInit()
 {
-    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/jjj.png); }");
+    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/robots.jpg); }");
     ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
@@ -42,12 +52,16 @@ void dulgripperWidget::uiInit()
     ui->place_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->error_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->exit_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+
+    live = cv::imread("/home/fshs/grabrb_ui/photo/grab.jpg", 1);
+    emit displayPixmap();
 }
 
 
 void dulgripperWidget::rosInit()
 {
-    detectImgSub = Node->subscribe<sensor_msgs::Image>("/PreImage", 1, &dulgripperWidget::detectImg_callback, this);
+    detectImgSub_I = Node->subscribe<sensor_msgs::Image>("/UR51/preview_image", 1, &dulgripperWidget::detectImg_callback, this);
+    detectImgSub_II = Node->subscribe<sensor_msgs::Image>("/UR52/preview_image", 1, &dulgripperWidget::detectImg_callback, this);
     hscfsm_task_client_ = Node->serviceClient<hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
     stop_pick_client_ = Node->serviceClient<std_srvs::Trigger>("stop_pick");
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
@@ -74,12 +88,11 @@ void dulgripperWidget::setFsmState(bool isOpen)
     else
     {
         ui->prepareButton->setEnabled(false);
-//        for(auto i: fsm_task_)
-//        {
-//            setLabelShowdual(dul_label_[i], "grey");
-//        }
+        for(auto i: fsm_task_)
+        {
+            setLabelShowdual(dul_label_[i], "grey");
+        }
     }
-
 }
 
 void dulgripperWidget::connetTaskLabel()
@@ -96,21 +109,23 @@ void dulgripperWidget::connetTaskLabel()
 
 void dulgripperWidget::setLabelShowdual(QLabel *label, std::string color)
 {
-    QPalette palette;
     if (color == "red")
     {
-        palette.setColor(QPalette::Background, QColor(255, 0, 0));
+        label->setStyleSheet("QLabel{ background-color: rgb(255, 0, 0); }");
+        return;
     }
+
     else if (color == "yellow")
     {
-        palette.setColor(QPalette::Background, QColor(255, 255, 0));
+        label->setStyleSheet("QLabel{ background-color: rgb(255, 255, 0); }");
+        return;
     }
+
     else if (color == "grey")
     {
-        palette.setColor(QPalette::Background, QColor(192, 192, 192));
+        label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+        return;
     }
-    label->setAutoFillBackground(true);
-    label->setPalette(palette);
 }
 
 
@@ -164,6 +179,8 @@ void dulgripperWidget::slot_resetButton_clicked()
 
 void dulgripperWidget::slot_robotBox_currentIndexChanged(const int &arg1)
 {
+    Q_UNUSED(arg1);
+
     std::string robot = ui->robotBox->currentText().toUtf8().data();
     std::cout << "选取机器人: " << robot  << std::endl;
     if(robot == "右边机器人")
@@ -178,6 +195,8 @@ void dulgripperWidget::slot_robotBox_currentIndexChanged(const int &arg1)
 
 void dulgripperWidget::slot_pickModeBox_currentIndexChanged(const int &arg1)
 {
+    Q_UNUSED(arg1);
+
     std::string pick_mode = ui->pickModeBox->currentText().toUtf8().data();
     std::cout << "抓取模式: " << pick_mode << std::endl;
     if(pick_mode == "桌子到货架")
@@ -190,24 +209,28 @@ void dulgripperWidget::slot_pickModeBox_currentIndexChanged(const int &arg1)
     }
 }
 
+void dulgripperWidget::slot_RevPixmap()
+{
+    //cv::Mat转QImage
+    QImage qimage((const uchar*)live.data, live.cols, live.rows, live.step, QImage::Format_RGB888);
+    QPixmap tmp_pixmap;
+    tmp_pixmap = QPixmap::fromImage(qimage);
+    ui->detectImg_label->setPixmap(tmp_pixmap);
+}
+
+
+
+
 
 void dulgripperWidget::detectImg_callback(const sensor_msgs::Image::ConstPtr &msg)
 {
-    std::cout << "进入回调函数成功" << std::endl;
-
     //触发自定义显示图片槽函数
     const cv_bridge::CvImageConstPtr &ptr = cv_bridge::toCvShare(msg, "bgr8");
-    live = ptr->image;
+    ptr->image.copyTo(live);
     cv::cvtColor(live, live, CV_BGR2RGB);
-    if(robot_ == "1")
-    {
-//        ui->detectImg_label->setPixmap("");
-    }
-    else
-    {
 
-    }
-
+    //触发显示图片信号
+    emit displayPixmap();
 }
 
 int dulgripperWidget::taskServerCmd(const std::string& behavior, const std::string& next_state, const std::vector<std::string>& params)
@@ -233,21 +256,5 @@ int dulgripperWidget::taskServerCmd(const std::string& behavior, const std::stri
         std::cout << "调用" << next_state << "状态失败" << std::endl;
     }
     return -1;
-}
-
-void dulgripperWidget::slot_RevPixmap()
-{
-//    while(!isUpdate)
-//    {
-//        std::cout << "Waiting for update..." << std::endl;
-//        sleep(1);
-//    }
-//    isUpdate = false;
-    QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
-    QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
-    //tmp_pixmap = tmp_pixmap.scaled(this->width() * 3/4, this->height() * 2/3, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-    ui->detectImg_label->setPixmap(tmp_pixmap);
-    ui->detectImg_label->setScaledContents(true);
 }
 

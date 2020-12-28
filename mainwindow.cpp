@@ -5,43 +5,71 @@ MainWindow::MainWindow(QWidget *parent, ros::NodeHandle *node) :
     QMainWindow(parent), Node(node),
     ui(new Ui::MainWindow)
 {
+    system("killall status_monitor_node");
+    sleep(2);
+
     ui->setupUi(this);
 
     //添加gobangwidget子类窗口
     gw = new gobangWidget(this, Node);
-    ui->tabWidget->addTab(gw, QString("GobangWar"));
+    ui->tabWidget->addTab(gw, QString("五子棋"));
 
 
     //添加cubewidget子类窗口
     cw = new cubeWidget(this, Node);
-    ui->tabWidget->addTab(cw, QString("Cube"));
+    ui->tabWidget->addTab(cw, QString("魔方"));
 
     //添加dulgripperwidget子类窗口
     dgw = new dulgripperWidget(this, Node);
-    ui->tabWidget->addTab(dgw, QString("DualGripper"));
+    ui->tabWidget->addTab(dgw, QString("顺序抓取"));
+    system("rosrun status_monitor status_monitor_node &");
+    sleep(2);
     setFsmState(false, false, false);
     initMonitorLabel();
+    uiInit();
     rosInit();
 }
 
 
 MainWindow::~MainWindow()
 {
+    system("killall status_monitor_node");
+    system("kill -9 $(ps -ef | grep status_monitor | awk '{print $2}')");
+    system("rosnode kill $(rosnode list | grep -v rosout) &") ;
+    sleep(5);
+    system("killall hscfsm_bridge");
+    system("kill -9 $(ps -ef | grep hscfsm | awk '{print $2}')");
+    system("rosrun status_monitor cleanup.sh &");
+    sleep(2);
     delete ui;
     delete gw;
     delete cw;
     delete dgw;
 }
 
+void MainWindow::uiInit()
+{
+    ui->label_main_logo->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/hsicon1.jpg); }");
+    ui->gomoku_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/gomoku_icon.jpg); }");
+    ui->cube_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/cube_icon1.jpg); }");
+    ui->grab_icon_label->setStyleSheet("QLabel{ border-image: url(/home/fshs/grabrb_ui/photo/grab1.jpg); }");
+
+}
+
 void MainWindow::rosInit()
 {
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
-    monitor_timer_ = Node->createTimer(ros::Duration(1.1), &MainWindow::monitorTimerCB, this);
+    control_gobang_client_ = Node->serviceClient<std_srvs::SetBool>("/control_gobang");
+    control_gobang_pub_ = Node->advertise<std_msgs::Bool>("/control_gobang", 10);
+    monitor_timer_ = Node->createTimer(ros::Duration(2), &MainWindow::monitorTimerCB, this);
     monitor_timer_.stop();
+//    rosReset();
 }
 
 void MainWindow::monitorTimerCB(const ros::TimerEvent &event)
 {
+    Q_UNUSED(event);
+
     std::string prefix = "/status";
     std::string param_name;
     bool status;
@@ -65,20 +93,34 @@ void MainWindow::setLabel(QLabel* label, bool status)
     if(status)
     {
         palette.setColor(QPalette::Background, QColor(0, 255, 0));
-//        label->setStyleSheet("QLabel{background-color:rgb(0,255,0);}");
     }
     else if(!status)
     {
         palette.setColor(QPalette::Background, QColor(255, 0, 0));
-//        label->setStyleSheet("QLabel{background-color:rgb(255,0,0);}");
     }
     label->setAutoFillBackground(true);  //一定要这句，否则不行
     label->setPalette(palette);
 }
 
+void MainWindow::rosReset()
+{
+    std::vector<bool> isReset;
+    bool reset[2];
+    isReset.resize(2);
+    Node->getParam("/status/right_robot_connet", reset[0]);
+    Node->getParam("/status/left_robot_connet", reset[1]);
+    if(reset[0] && reset[1])
+    {
+        system("rosnode kill $(rosnode list | grep -v Gomoku_UI | grep -v status_monitor | grep -v rosout) &") ;
+        sleep(5);
+        system("rosrun status_monitor cleanup.sh &");
+        sleep(2);
+    }
+}
+
 void MainWindow::initMonitorLabel()
 {
-//    Node->getParam("/status/node_list", node_list);
+
     node_list = {"/UR51/gripper_bridge", "/UR52/gripper_bridge", "/UR51/vision_bridge", "/UR52/vision_bridge",
                  "/pickplace_bridge0", "/pickplace_bridge1", "/dm_bridge", "/hscfsm_bridge", "/cube_bridge",
                  "/motion_bridge", "/perception_bridge"};
@@ -94,7 +136,6 @@ void MainWindow::initMonitorLabel()
     map_node_label_[node_list[9]] = ui->label_tabmain_motionBridge;
     map_node_label_[node_list[10]] = ui->label_tabmain_perceptionBridge;
 
-//    Node->getParam("/status/topic_list", topic_list);
     topic_list = {"/camera_base_left/color/camera_info", "/camera_base_right/color/camera_info", "/left_robot_connet",
                   "/left_robot_error", "/left_robot_power", "/right_robot_connet", "/right_robot_error", "/right_robot_power"};
     map_topic_label_[topic_list[0]] = ui->label_tabmain_d435i_left;
@@ -110,6 +151,8 @@ void MainWindow::initMonitorLabel()
 
 void MainWindow::on_btn_tabmain_loadFsm_clicked()
 {
+    std::thread t([&]{
+
     ui->btn_tabmain_loadFsm->setEnabled(false);
     hirop_msgs::startTaskCmd srv;
     srv.request.mode = false;
@@ -117,9 +160,16 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
     bool gobang = false;
     bool cube = false;
     bool dul = false;
+    monitor_timer_.stop();
+    system("killall hscfsm_bridge");
+    sleep(1);
+    system("rosrun hscfsm_bridge hscfsm_bridge &");
+    sleep(2);
+    monitor_timer_.start();
     if(fsm == "五子棋")
     {
         srv.request.taskId = 3;
+        load_gobang_ = true;
         gobang = true;
     }
     else if(fsm == "拧魔方")
@@ -137,7 +187,21 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
         ui->btn_tabmain_loadFsm->setEnabled(true);
         return;
     }
-    if(start_task_client_.call(srv))
+
+    if(!start_task_client_.call(srv))
+    {
+
+//        system("kill -9 $(ps -ef | grep hscfsm | awk '{print $2}')");
+//        system("rosrun status_monitor cleanup.sh ");
+
+        system("killall hscfsm_bridge");
+        sleep(1);
+        system("rosrun hscfsm_bridge hscfsm_bridge &");
+        sleep(2);
+        setFsmState(gobang, cube, dul);
+        start_task_client_.call(srv);
+    }
+    else
     {
         std::cout << "设置" << fsm << ((srv.response.ret) ? "成功" : "失败") << std::endl;
         if(srv.response.ret)
@@ -148,25 +212,40 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
         {
             setFsmState(false, false, false);
         }
-    }
-    else
-    {
-        system("rosrun status_monitor cleanup.sh &");
-        system("rosrun hscfsm_bridge hscfsm_bridge &");
-        sleep((3));
-        setFsmState(gobang, cube, dul);
-        start_task_client_.call(srv);
-        ui->btn_tabmain_loadFsm->setEnabled(true);
-        return;
-//        std::cout << "调用状态机服务失败" << std::endl;
-//        setFsmState(false, false, false);
-
-    }
-    std::thread t([&]{
         sleep(3);
-        ui->btn_tabmain_loadFsm->setEnabled(true);
+    }
+    controlGobang(gobang);
+    ui->btn_tabmain_loadFsm->setEnabled(true);
     });
     t.detach();
+
+}
+
+void MainWindow::controlGobang(bool gobang)
+{
+    if(load_gobang_)
+    {
+//        std_srvs::SetBool sr;
+//        if(!gobang)
+//        {
+//            load_gobang_ = false;
+//            sr.request.data = false;
+//        }
+//        else
+//            sr.request.data = true;
+//        control_gobang_client_.call(sr);
+
+        std_msgs::Bool msg;
+        if (!gobang)
+        {
+            load_gobang_ = false;
+            msg.data = false;
+        }
+        else
+            msg.data = true;
+//        sleep(0.5);
+        control_gobang_pub_.publish(msg);
+    }
 }
 
 void MainWindow::setFsmState(bool gobang, bool cube, bool dulgripper)
@@ -174,6 +253,9 @@ void MainWindow::setFsmState(bool gobang, bool cube, bool dulgripper)
     gw->setFsmState(gobang);
     cw->setFsmState(cube);
     dgw->setFsmState(dulgripper);
+    setLabel(ui->gomoku_icon_text_label, gobang);
+    setLabel(ui->cube_icon_text_label, cube);
+    setLabel(ui->grab_icon_text_label, dulgripper);
 }
 
 void MainWindow::on_btn_tabmain_devConn_clicked()
@@ -211,10 +293,11 @@ void MainWindow::on_btn_tabmain_sysReset_clicked()
     ui->btn_tabmain_sysReset->setEnabled(false);
     std::thread t([&]{
         setFsmState(false, false, false);
-       system("rosnode kill $(rosnode list | grep -v Gomoku_UI | grep -v status_monitor) &") ;
-       sleep(5);
-       system("rosrun hscfsm_bridge kill_all_node.sh");
-       sleep(2);
+        rosReset();
+//       system("rosnode kill $(rosnode list | grep -v Gomoku_UI | grep -v status_monitor | grep -v rosout) &") ;
+//       sleep(5);
+//       system("rosrun status_monitor cleanup.sh ");
+//       sleep(2);
        ui->btn_tabmain_sysReset->setEnabled(true);
        ui->btn_tabmain_devConn->setEnabled(true);
     });

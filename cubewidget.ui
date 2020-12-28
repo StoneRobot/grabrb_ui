@@ -57,66 +57,130 @@ padding:0 1px;
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
-             <layout class="QGridLayout" name="gridLayout">
-              <item row="0" column="0">
-               <widget class="QLabel" name="RightImg_label">
-                <property name="text">
-                 <string>Right</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-               </widget>
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <item>
+                 <widget class="QWidget" name="RightImg_widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_23">
+                   <item>
+                    <widget class="QLabel" name="RightImg_label">
+                     <property name="text">
+                      <string>魔方右面</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="FrontImg_label">
-                <property name="text">
-                 <string>Front</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-               </widget>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <item>
+                 <widget class="QWidget" name="DownImg_widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_21">
+                   <item>
+                    <widget class="QLabel" name="DownImg_label">
+                     <property name="text">
+                      <string>魔方底面</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
-              <item row="3" column="1">
-               <widget class="QLabel" name="BackImg_label">
-                <property name="text">
-                 <string>Back</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-               </widget>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <item>
+                 <widget class="QWidget" name="FrontImg_widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_22">
+                   <item>
+                    <widget class="QLabel" name="FrontImg_label">
+                     <property name="text">
+                      <string>魔方正面</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="UpImg_label">
-                <property name="text">
-                 <string>Up</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-               </widget>
+             </layout>
+            </item>
+            <item row="0" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_17">
+                <item>
+                 <widget class="QWidget" name="UpImg_widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_20">
+                   <item>
+                    <widget class="QLabel" name="UpImg_label">
+                     <property name="text">
+                      <string>魔方顶面</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="DownImg_label">
-                <property name="text">
-                 <string>Down</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-               </widget>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_14">
+                <item>
+                 <widget class="QWidget" name="LeftImg_widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_18">
+                   <item>
+                    <widget class="QLabel" name="LeftImg_label">
+                     <property name="text">
+                      <string>魔方左面</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="LeftImg_label">
-                <property name="text">
-                 <string>Left</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-               </widget>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_16">
+                <item>
+                 <widget class="QWidget" name="BackImg_widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_19">
+                   <item>
+                    <widget class="QLabel" name="BackImg_label">
+                     <property name="text">
+                      <string>魔方背面</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -160,7 +224,7 @@ padding:0 1px;
            </property>
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="0" column="0">
-             <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,0,0,0,0,0,0,0">
+             <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,0,0,0,0,0,0,0,0">
               <item row="1" column="0">
                <widget class="QPushButton" name="collectButton">
                 <property name="text">
@@ -182,14 +246,14 @@ padding:0 1px;
                 </property>
                </widget>
               </item>
-              <item row="7" column="0">
+              <item row="8" column="0">
                <widget class="QPushButton" name="resetButton">
                 <property name="text">
                  <string>重置</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
+              <item row="7" column="0">
                <widget class="QPushButton" name="automaticButton">
                 <property name="text">
                  <string>全自动</string>
@@ -203,10 +267,17 @@ padding:0 1px;
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
+              <item row="6" column="0">
                <widget class="QPushButton" name="placeCubeButton">
                 <property name="text">
                  <string>放下魔方</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QPushButton" name="stopMovePushButton">
+                <property name="text">
+                 <string>停止</string>
                 </property>
                </widget>
               </item>

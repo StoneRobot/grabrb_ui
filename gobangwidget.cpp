@@ -27,10 +27,10 @@ void gobangWidget::setFsmState(bool isOpen)
     else
     {
         ui->StartButton->setEnabled(false);
-//        for (size_t i = 0; i < stateLabels.size(); i++)
-//        {
-//            setLabelShow(stateLabels[i], "grey");
-//        }
+        for (size_t i = 0; i < stateLabels.size(); i++)
+        {
+            setLabelShow(stateLabels[i], "grey");
+        }
     }
 }
 
@@ -87,8 +87,9 @@ void gobangWidget::uiInit()
 void gobangWidget::RosInit()
 {
     control_pub = Node->advertise <std_msgs::String>("/GobangGame/ControlSignal", 100);
-    state_sub = Node->subscribe <std_msgs::String>("/GobangGame/GameParam", 1, &gobangWidget::stateSub_callback, this);
+    state_sub = Node->subscribe <std_msgs::String>("/GobangGame/GameState", 1, &gobangWidget::stateSub_callback, this);
     attacker_sub = Node->subscribe <std_msgs::Int16>("/GobangGame/GameAttack", 1, &gobangWidget::attackerSub_callback, this);
+    log_sub = Node->subscribe <std_msgs::String>("/GobangGame/GameLog", 1, &gobangWidget::logSub_callback, this);
     ChessBoardImg_sub = Node->subscribe <sensor_msgs::Image>("/GobangVision/ChessBoardDetection", 1, &gobangWidget::ChessBoardImg_callback, this);
     hscfsm_task_client = Node->serviceClient <hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
 }
@@ -101,8 +102,6 @@ void gobangWidget::slot_RevPixmap()
     QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
     QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
     //设置在对应label中显示
-//    ui->ChessBoardLabel->resize(ui->chessBoard_widget->size());
-//    ui->ChessBoardLabel->setScaledContents(true);
     ui->ChessBoardLabel->setPixmap(tmp_pixmap);
 
 }
@@ -145,7 +144,9 @@ void gobangWidget::slot_StartButton_clicked()
     }
 
     //开始后不能继续选择先手方，先手方只能在棋局开始之前设置
+    //开始后需要进入暂停才能进行模式切换
     ui->FirstRoundBox->setEnabled(false);
+    ui->ChangeModeButton->setEnabled(false);
 
     //防止多次点击开始，重置后才能再次点击开始
     ui->StartButton->setEnabled(false);
@@ -156,6 +157,7 @@ void gobangWidget::slot_StopButton_clicked()
 {
     //发送暂停信号
     pub_control_signal("stop");
+
 }
 
 void gobangWidget::slot_ResumeButton_clicked()
@@ -166,9 +168,8 @@ void gobangWidget::slot_ResumeButton_clicked()
 
 void gobangWidget::slot_RestartButton_clicked()
 {
-    //发送重置信号
+    //发送结束棋局信号
     pub_control_signal("end");
-
 }
 
 void gobangWidget::slot_ConfirmButtton_clicked()
@@ -179,14 +180,14 @@ void gobangWidget::slot_ConfirmButtton_clicked()
 
 void gobangWidget::slot_ResetButton_clicker()
 {
-    //重置状态机状态，exit to run
+    //重置状态机状态，exit to run，并重新置位棋局运行标志为
     taskServerCmd("restart", "exit");
+    pub_control_signal("reset");
 
-    //恢复开始按钮
+    //重新使能界面按钮
     ui->StartButton->setEnabled(true);
-
-    //重新使能先手方选项
     ui->FirstRoundBox->setEnabled(true);
+    ui->ChangeModeButton->setEnabled(true);
 
     setLabelShow(ui->whiteAttack_label, "grey");
     setLabelShow(ui->blackAttack_label, "grey");
@@ -291,6 +292,12 @@ void gobangWidget::refreshState(std::string state)
         else
             setLabelShow(stateLabels[i], "grey");
     }
+
+    if (state == "stop")
+    {
+        //开启切换模式按钮
+        ui->ChangeModeButton->setEnabled(true);
+    }
 }
 
 void gobangWidget::refreshAttackSide(int attacker)
@@ -304,6 +311,24 @@ void gobangWidget::refreshAttackSide(int attacker)
     {
         setLabelShow(ui->whiteAttack_label, "grey");
         setLabelShow(ui->blackAttack_label, "red");
+    }
+}
+
+void gobangWidget::showLog(std::string log)
+{
+    if (log == "humanA" || log == "humanB" || log == "robotA" || log == "robotB")
+    {
+        std::string word = log + "取得胜利";
+        const char *p = word.c_str();
+        QMessageBox::information(this, "Warn", QString::fromLocal8Bit(p));
+        return;
+    }
+
+    else
+    {
+        const char *p = log.c_str();
+        QMessageBox::information(this, "Warn", QString::fromLocal8Bit(p));
+        return;
     }
 }
 
@@ -348,7 +373,7 @@ void gobangWidget::ChessBoardImg_callback(const sensor_msgs::Image::ConstPtr &ms
 {
     std::cout << "进入回调函数成功" << std::endl;
     const cv_bridge::CvImageConstPtr &ptr = cv_bridge::toCvShare(msg, "bgr8");
-    live = ptr->image;
+    ptr->image.copyTo(live);
     cv::cvtColor(live, live, CV_BGR2RGB);
 
     //触发自定义显示图片槽函数
@@ -365,6 +390,12 @@ void gobangWidget::attackerSub_callback(const std_msgs::Int16::ConstPtr &msg)
 {
     int result = msg->data;
     refreshAttackSide(result);
+}
+
+void gobangWidget::logSub_callback(const std_msgs::String::ConstPtr& msg)
+{
+    std::string result = msg->data.c_str();
+    showLog(result);
 }
 
 int gobangWidget::taskServerCmd(const std::string &behavior, const std::string &next_state, const std::vector<std::string> &params)

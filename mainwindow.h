@@ -7,6 +7,8 @@
 #include <ros/ros.h>
 #include <QDebug>
 #include <thread>
+#include <std_srvs/SetBool.h>
+#include <std_msgs/Bool.h>
 
 #include "gobangwidget.h"
 #include "cubewidget.h"
@@ -30,11 +32,14 @@ public:
     ~MainWindow();
 
 private:
+    void uiInit();
     void rosInit();
     void initMonitorLabel();
     void monitorTimerCB(const ros::TimerEvent& event);
     void setLabel(QLabel* label, bool status);
     void setFsmState(bool gobang, bool cube, bool dulgripper);
+    void controlGobang(bool gobang);
+    void rosReset();
 
 private slots:
 
@@ -56,7 +61,11 @@ private:
     ros::NodeHandle *Node;
 
     ros::ServiceClient start_task_client_;
+    ros::ServiceClient control_gobang_client_;
+    ros::Publisher control_gobang_pub_;
     ros::Timer monitor_timer_;
+
+    bool load_gobang_ = false;
 
     std::vector<std::string> node_list;
     std::vector<std::string> topic_list;

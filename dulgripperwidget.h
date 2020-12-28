@@ -5,6 +5,9 @@
 #include <QMessageBox>
 #include <QString>
 #include <QLatin1String>
+#include <QPaintEvent>
+#include <QImage>
+#include <QPixmap>
 
 
 #include <iostream>
@@ -40,13 +43,16 @@ public:
     ~dulgripperWidget();
 
     void setFsmState(bool isOpen);
+protected:
+    void paintEvent(QPaintEvent *event);
 
 private:
 
     //ros节点指针
     ros::NodeHandle *Node;
 
-    ros::Subscriber detectImgSub;
+    ros::Subscriber detectImgSub_I;
+    ros::Subscriber detectImgSub_II;
 
     ros::ServiceClient hscfsm_task_client_;
     ros::ServiceClient stop_pick_client_;
