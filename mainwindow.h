@@ -3,10 +3,17 @@
 
 #include <QMainWindow>
 #include <QWidget>
+#include <QTimer>
+#include <QString>
+#include <QLabel>
+#include <QDateTime>
+
 
 #include <ros/ros.h>
 #include <QDebug>
 #include <thread>
+#include <std_srvs/SetBool.h>
+#include <std_msgs/Bool.h>
 
 #include "gobangwidget.h"
 #include "cubewidget.h"
@@ -35,6 +42,9 @@ private:
     void initMonitorLabel();
     void monitorTimerCB(const ros::TimerEvent& event);
     void setLabel(QLabel* label, bool status);
+    void setFsmState(bool gobang, bool cube, bool dulgripper);
+    void controlGobang(bool gobang);
+    void rosReset();
 
 private slots:
 
@@ -50,13 +60,19 @@ private slots:
 
     void on_btn_tabmain_close_clicked();
 
+    void time_update();
+
 private:
 
     //ROS节点指针
     ros::NodeHandle *Node;
 
     ros::ServiceClient start_task_client_;
+    ros::ServiceClient control_gobang_client_;
+    ros::Publisher control_gobang_pub_;
     ros::Timer monitor_timer_;
+
+    bool load_gobang_ = false;
 
     std::vector<std::string> node_list;
     std::vector<std::string> topic_list;
@@ -69,6 +85,8 @@ private:
     gobangWidget *gw;
     cubeWidget *cw;
     dulgripperWidget *dgw;
+
+    QLabel *time_label;
 
 
 

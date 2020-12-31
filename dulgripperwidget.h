@@ -6,6 +6,8 @@
 #include <QString>
 #include <QLatin1String>
 #include <QPaintEvent>
+#include <QImage>
+#include <QPixmap>
 
 
 #include <iostream>
@@ -40,6 +42,7 @@ public:
 
     ~dulgripperWidget();
 
+    void setFsmState(bool isOpen);
 protected:
     void paintEvent(QPaintEvent *event);
 
@@ -48,12 +51,15 @@ private:
     //ros节点指针
     ros::NodeHandle *Node;
 
-    ros::Subscriber detectImgSub;
+    ros::Subscriber detectImgSub_I;
+    ros::Subscriber detectImgSub_II;
 
     ros::ServiceClient hscfsm_task_client_;
     ros::ServiceClient stop_pick_client_;
     ros::ServiceClient start_task_client_;
     ros::Subscriber fsm_task_sub_;
+
+    bool fsm_open_;
 
     //抓取设置参数
     std::string robot_ = "0";
@@ -66,6 +72,7 @@ private:
 
     std::vector<std::string> fsm_task_;
     std::map<std::string, QLabel*> dul_label_;
+
 
     void fsmTaskSubCB(const std_msgs::StringConstPtr& msg);
     void setLabelShowdual(QLabel *label, std::string color);

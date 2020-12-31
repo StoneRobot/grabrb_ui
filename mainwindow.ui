@@ -196,13 +196,6 @@ padding:0 1px;
                        </property>
                       </widget>
                      </item>
-                     <item row="3" column="0">
-                      <widget class="QLabel" name="label_tabmain_senceFinish_2">
-                       <property name="text">
-                        <string>场景加载完毕</string>
-                       </property>
-                      </widget>
-                     </item>
                      <item row="1" column="3">
                       <widget class="QLabel" name="label_tabmain_gripper_node_right">
                        <property name="text">
@@ -227,8 +220,7 @@ padding:0 1px;
                      <item row="1" column="6">
                       <widget class="QLabel" name="label_tabmain_d435i_right">
                        <property name="text">
-                        <string>d435i相机连接
-（右）</string>
+                        <string>d435i（右）</string>
                        </property>
                       </widget>
                      </item>
@@ -249,8 +241,7 @@ padding:0 1px;
                      <item row="0" column="6">
                       <widget class="QLabel" name="label_tabmain_d435i_left">
                        <property name="text">
-                        <string>d435i相机连接
-（左）</string>
+                        <string>d435i（左）</string>
                        </property>
                       </widget>
                      </item>

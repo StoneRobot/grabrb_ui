@@ -42,6 +42,8 @@ public:
 
     ~gobangWidget();
 
+    void setFsmState(bool isOpen);
+
 protected:
     void paintEvent(QPaintEvent *event);
 
@@ -71,6 +73,11 @@ private:
      * @brief: 刷新状态显示
      */
     void refreshState(std::string state);
+
+    /*
+     * @brief: 显示日志
+     */
+    void showLog(std::string log);
 
     /*
      * @brief: 设置QLabel状态
@@ -146,6 +153,7 @@ private:
     ros::Publisher control_pub;
     ros::Subscriber state_sub;
     ros::Subscriber attacker_sub;
+    ros::Subscriber log_sub;
     ros::Subscriber ChessBoardImg_sub;
     ros::ServiceClient hscfsm_task_client;
 
@@ -155,7 +163,7 @@ private:
 
     //棋局设置参数
     std::string mode = "MODE";
-    std::string firstRound = "RANDOW";
+    std::string firstRound = "RANDOM";
 
     //棋盘最新照片
     cv::Mat live;
@@ -163,6 +171,8 @@ private:
     //状态机状态数组
     int fsm_state[5];
     std::vector<QLabel* > stateLabels;
+
+    bool fsm_open_;
 
 private:
 
@@ -190,6 +200,11 @@ private:
      * @brief: 当前棋局攻击方订阅回调函数
      */
     void attackerSub_callback(const std_msgs::Int16::ConstPtr& msg);
+
+    /*
+     * @brief: 游戏日志订阅回调函数
+     */
+    void logSub_callback(const std_msgs::String::ConstPtr& msg);
 
     /*
      * @brief: 状态机切换状态行为函数

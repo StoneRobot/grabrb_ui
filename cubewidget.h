@@ -22,6 +22,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "hirop_msgs/taskInputCmd.h"
+#include <std_msgs/Bool.h>
 
 namespace Ui {
 class cubeWidget;
@@ -37,6 +38,7 @@ public:
 
     ~cubeWidget();
 
+    void setFsmState(bool isOpen);
 protected:
 
      void paintEvent(QPaintEvent *event);
@@ -50,7 +52,10 @@ private:
     ros::Subscriber color_serial_sub;
     ros::Subscriber cube_image_sub;
     ros::Publisher update_color_serial_pub;
+    ros::Publisher stop_move_pub_;
     ros::ServiceClient hscfsm_task_client_;
+
+    bool fsm_open_;
 
     //界面窗口指针
     Ui::cubeWidget *ui;
@@ -95,6 +100,7 @@ private:
      * @brief: 切换状态机状态行为函数
      */
     int taskServerCmd(const std::string& behavior, const std::string& next_state, const std::vector<std::string>& params=std::vector<std::string>());
+
 
 signals:
 
@@ -146,6 +152,7 @@ private slots:
 
     void slot_resetButton_clicked();
 
+    void on_stopMovePushButton_clicked();
 };
 
 #endif // CUBEWIDGET_H

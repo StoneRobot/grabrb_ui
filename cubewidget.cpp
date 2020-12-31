@@ -17,7 +17,6 @@ cubeWidget::~cubeWidget()
     delete ui;
 }
 
-
 void cubeWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
@@ -30,8 +29,6 @@ void cubeWidget::paintEvent(QPaintEvent *event)
     ui->FrontImg_label->resize(ui->FrontImg_widget->size());
     ui->BackImg_label->resize(ui->BackImg_widget->size());
 }
-
-
 
 void cubeWidget::signalAndSlot()
 {
@@ -75,8 +72,22 @@ void cubeWidget::rosInit()
     color_serial_sub = Node->subscribe <std_msgs::String>("/changeColor", 1, &cubeWidget::colorSerial_callback, this);
 //    cube_image_sub = Node->subscribe <sensor_msgs::Image>("/cube_image", 1, &cubeWidget::cubeImg_callback, this);
     hscfsm_task_client_ = Node->serviceClient<hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
+    stop_move_pub_ = Node->advertise<std_msgs::Bool>("/stop_move", 10);
 }
 
+
+void cubeWidget::setFsmState(bool isOpen)
+{
+    fsm_open_ = isOpen;
+    if(fsm_open_)
+    {
+        ui->prepareButton->setEnabled(true);
+    }
+    else
+    {
+        ui->prepareButton->setEnabled(false);
+    }
+}
 
 void cubeWidget::slot_collectButton_clicked()
 {
@@ -135,14 +146,17 @@ void cubeWidget::slot_cubeImgDisay()
 //    }
 }
 
+
 void cubeWidget::slot_prepareButton_clicked()
 {
+    system("rosrun rubik_cube_solve set_robot_enable_true.sh");
     std::cout << "prepare" << std::endl;
     taskServerCmd("toHome", "prepare");
 }
 
 void cubeWidget::slot_placeCubeButton_clicked()
 {
+    ui->placeCubeButton->setEnabled(false);
     std::cout << "place cube" << std::endl;
     std::cout << "place cube" << std::endl;
     taskServerCmd("place", "place cube");
@@ -209,3 +223,12 @@ int cubeWidget::taskServerCmd(const std::string& behavior, const std::string& ne
 }
 
 
+
+void cubeWidget::on_stopMovePushButton_clicked()
+{
+    ui->stopMovePushButton->setEnabled(false);
+    std_msgs::Bool msg;
+    msg.data = true;
+    stop_move_pub_.publish(msg);
+    ui->stopMovePushButton->setEnabled(true);
+}

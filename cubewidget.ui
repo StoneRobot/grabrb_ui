@@ -224,7 +224,7 @@ padding:0 1px;
            </property>
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="0" column="0">
-             <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,0,0,0,0,0,0,0">
+             <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,0,0,0,0,0,0,0,0">
               <item row="1" column="0">
                <widget class="QPushButton" name="collectButton">
                 <property name="text">
@@ -246,14 +246,14 @@ padding:0 1px;
                 </property>
                </widget>
               </item>
-              <item row="7" column="0">
+              <item row="8" column="0">
                <widget class="QPushButton" name="resetButton">
                 <property name="text">
                  <string>重置</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
+              <item row="7" column="0">
                <widget class="QPushButton" name="automaticButton">
                 <property name="text">
                  <string>全自动</string>
@@ -267,10 +267,17 @@ padding:0 1px;
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
+              <item row="6" column="0">
                <widget class="QPushButton" name="placeCubeButton">
                 <property name="text">
                  <string>放下魔方</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QPushButton" name="stopMovePushButton">
+                <property name="text">
+                 <string>停止</string>
                 </property>
                </widget>
               </item>

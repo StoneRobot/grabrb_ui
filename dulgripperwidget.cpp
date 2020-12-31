@@ -52,12 +52,16 @@ void dulgripperWidget::uiInit()
     ui->place_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->error_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->exit_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+
+    live = cv::imread("/home/fshs/grabrb_ui/photo/grab.jpg", 1);
+    emit displayPixmap();
 }
 
 
 void dulgripperWidget::rosInit()
 {
-    detectImgSub = Node->subscribe<sensor_msgs::Image>("/preview_image", 1, &dulgripperWidget::detectImg_callback, this);
+    detectImgSub_I = Node->subscribe<sensor_msgs::Image>("/UR51/preview_image", 1, &dulgripperWidget::detectImg_callback, this);
+    detectImgSub_II = Node->subscribe<sensor_msgs::Image>("/UR52/preview_image", 1, &dulgripperWidget::detectImg_callback, this);
     hscfsm_task_client_ = Node->serviceClient<hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
     stop_pick_client_ = Node->serviceClient<std_srvs::Trigger>("stop_pick");
     start_task_client_ = Node->serviceClient<hirop_msgs::startTaskCmd>("/startTaskAggreServer");
@@ -74,6 +78,23 @@ void dulgripperWidget::fsmTaskSubCB(const std_msgs::StringConstPtr& msg)
     setLabelShowdual(dul_label_[msg->data], "yellow");
 }
 
+void dulgripperWidget::setFsmState(bool isOpen)
+{
+    fsm_open_ = isOpen;
+    if(fsm_open_)
+    {
+        ui->prepareButton->setEnabled(true);
+    }
+    else
+    {
+        ui->prepareButton->setEnabled(false);
+        for(auto i: fsm_task_)
+        {
+            setLabelShowdual(dul_label_[i], "grey");
+        }
+    }
+}
+
 void dulgripperWidget::connetTaskLabel()
 {
     fsm_task_={"init", "prepare", "detection", "pick", "place", "error", "exit"};
@@ -88,21 +109,23 @@ void dulgripperWidget::connetTaskLabel()
 
 void dulgripperWidget::setLabelShowdual(QLabel *label, std::string color)
 {
-    QPalette palette;
     if (color == "red")
     {
-        palette.setColor(QPalette::Background, QColor(255, 0, 0));
+        label->setStyleSheet("QLabel{ background-color: rgb(255, 0, 0); }");
+        return;
     }
+
     else if (color == "yellow")
     {
-        palette.setColor(QPalette::Background, QColor(255, 255, 0));
+        label->setStyleSheet("QLabel{ background-color: rgb(255, 255, 0); }");
+        return;
     }
+
     else if (color == "grey")
     {
-        palette.setColor(QPalette::Background, QColor(192, 192, 192));
+        label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
+        return;
     }
-    label->setAutoFillBackground(true);
-    label->setPalette(palette);
 }
 
 
@@ -189,23 +212,21 @@ void dulgripperWidget::slot_pickModeBox_currentIndexChanged(const int &arg1)
 void dulgripperWidget::slot_RevPixmap()
 {
     //cv::Mat转QImage
-    QImage qimage((uchar*)live.data, live.cols, live.rows, QImage::Format_RGB888);
-    QPixmap tmp_pixmap = QPixmap::fromImage(qimage);
+    QImage qimage((const uchar*)live.data, live.cols, live.rows, live.step, QImage::Format_RGB888);
+    QPixmap tmp_pixmap;
+    tmp_pixmap = QPixmap::fromImage(qimage);
     ui->detectImg_label->setPixmap(tmp_pixmap);
 }
-
-
 
 void dulgripperWidget::detectImg_callback(const sensor_msgs::Image::ConstPtr &msg)
 {
     //触发自定义显示图片槽函数
     const cv_bridge::CvImageConstPtr &ptr = cv_bridge::toCvShare(msg, "bgr8");
-    live = ptr->image;
+    ptr->image.copyTo(live);
     cv::cvtColor(live, live, CV_BGR2RGB);
 
     //触发显示图片信号
     emit displayPixmap();
-
 }
 
 int dulgripperWidget::taskServerCmd(const std::string& behavior, const std::string& next_state, const std::vector<std::string>& params)
@@ -232,6 +253,3 @@ int dulgripperWidget::taskServerCmd(const std::string& behavior, const std::stri
     }
     return -1;
 }
-
-
-
