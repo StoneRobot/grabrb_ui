@@ -32,12 +32,14 @@ MainWindow::MainWindow(QWidget *parent, ros::NodeHandle *node) :
 
 MainWindow::~MainWindow()
 {
+    monitor_timer_.stop();
     system("killall status_monitor_node");
     system("kill -9 $(ps -ef | grep status_monitor | awk '{print $2}')");
     system("rosnode kill $(rosnode list | grep -v rosout) &") ;
     sleep(5);
     system("killall hscfsm_bridge");
     system("kill -9 $(ps -ef | grep hscfsm | awk '{print $2}')");
+    system("kill -9 $(ps -ef | grep rviz | awk '{print $2}')");
     system("rosrun status_monitor cleanup.sh &");
     sleep(2);
     delete ui;
@@ -48,11 +50,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::uiInit()
 {
-    ui->label_main_logo->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/hsicon1.jpg); }");
     ui->gomoku_icon_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/gomoku_icon.jpg); }");
     ui->cube_icon_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/cube_icon1.jpg); }");
     ui->grab_icon_label->setStyleSheet("QLabel{ border-image: url(:/photosource/photo/grab1.jpg); }");
-
+    ui->btn_tabmain_loadFsm->setEnabled(false);
 
     //状态栏显示时间控件初始化
     time_label = new QLabel;
@@ -70,7 +71,6 @@ void MainWindow::rosInit()
     control_gobang_pub_ = Node->advertise<std_msgs::Bool>("/control_gobang", 10);
     monitor_timer_ = Node->createTimer(ros::Duration(2), &MainWindow::monitorTimerCB, this);
     monitor_timer_.stop();
-//    rosReset();
 }
 
 void MainWindow::monitorTimerCB(const ros::TimerEvent &event)
@@ -91,6 +91,17 @@ void MainWindow::monitorTimerCB(const ros::TimerEvent &event)
         param_name = prefix + j;
         Node->getParam(param_name, status);
         setLabel(map_topic_label_[j], status);
+    }
+    bool robot_enable[2];
+    Node->getParam("/status/left_robot_power", robot_enable[0]);
+    Node->getParam("/status/right_robot_power", robot_enable[1]);
+    if(!robot_enable[0] && !robot_enable[1])
+    {
+        ui->btn_tabmain_sysStop->setText("上使能");
+    }
+    else
+    {
+        ui->btn_tabmain_sysStop->setText("紧急停止");
     }
 }
 
@@ -197,10 +208,6 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
 
     if(!start_task_client_.call(srv))
     {
-
-//        system("kill -9 $(ps -ef | grep hscfsm | awk '{print $2}')");
-//        system("rosrun status_monitor cleanup.sh ");
-
         system("killall hscfsm_bridge");
         sleep(1);
         system("rosrun hscfsm_bridge hscfsm_bridge &");
@@ -292,7 +299,11 @@ void MainWindow::on_btn_tabmain_runPrepare_clicked()
 void MainWindow::on_btn_tabmain_sysStop_clicked()
 {
     ui->btn_tabmain_sysStop->setEnabled(false);
-    system("rosrun hscfsm_bridge set_robot_enable_false.sh");
+    std::string text = ui->btn_tabmain_sysStop->text().toUtf8().data();
+    if(text == "紧急停止")
+        system("rosrun hscfsm_bridge set_robot_enable_false.sh");
+    else
+        system("rosrun hscfsm_bridge set_robot_enable_true.sh");
     ui->btn_tabmain_sysStop->setEnabled(true);
 }
 
@@ -327,5 +338,17 @@ void MainWindow::time_update()
     //设置显示的时间
     QString timestr = current_time.toString("yyyy年MM月dd日 hh:mm:ss");
     time_label->setText(timestr);
+}
 
+void MainWindow::on_cbox_tabmain_chooseMode_activated(const QString &arg1)
+{
+    std::string fsm = ui->cbox_tabmain_chooseMode->currentText().toUtf8().data();
+    if(fsm == "请选择运行状态机")
+    {
+        ui->btn_tabmain_loadFsm->setEnabled(false);
+    }
+    else
+    {
+        ui->btn_tabmain_loadFsm->setEnabled(true);
+    }
 }

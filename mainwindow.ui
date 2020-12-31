@@ -18,17 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="vLayout_main" stretch="1,6">
       <item>
-       <layout class="QHBoxLayout" name="hLayout_main_11" stretch="2,3">
-        <item>
-         <widget class="QLabel" name="label_main_logo">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap>../../../../../catkin_ws/src/HS_HandGrasp/handrb_ui/photo/logo.png</pixmap>
-          </property>
-         </widget>
-        </item>
+       <layout class="QHBoxLayout" name="hLayout_main_11" stretch="3">
         <item>
          <widget class="QLabel" name="label_main_title">
           <property name="font">

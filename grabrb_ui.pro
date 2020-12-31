@@ -22,8 +22,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+#添加支持c++11
 QMAKE_CXXFLAGS += -std=c++11
 CONFIG += c++11
+
+#添加忽略参数不使用警告
+QMAKE_CXXFLAGS +=  -Wno-unused-parameter
 
 #添加ROS库
 INCLUDEPATH += /opt/ros/kinetic/include

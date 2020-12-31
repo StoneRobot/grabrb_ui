@@ -44,7 +44,7 @@ void dulgripperWidget::signalAndSlot()
 
 void dulgripperWidget::uiInit()
 {
-    ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(:/photosource/photo/robots.jpg); }");
+   // ui->griprParam_groupBox->setStyleSheet("QGroupBox{ border-image: url(/home/fshs/grabrb_ui/photo/robots.jpg); }");
     ui->init_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->prepare_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->detection_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
@@ -53,8 +53,8 @@ void dulgripperWidget::uiInit()
     ui->error_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
     ui->exit_label->setStyleSheet("QLabel{ background-color: rgb(192, 192, 192); }");
 
-    live = cv::imread("/home/fshs/grabrb_ui/photo/grab.jpg", 1);
-    emit displayPixmap();
+    //live = cv::imread("/home/fshs/grabrb_ui/photo/grab.jpg", 1);
+    //emit displayPixmap();
 }
 
 
