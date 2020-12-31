@@ -12,11 +12,13 @@
 #include <cv_bridge/cv_bridge.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Int8MultiArray.h>
+#include <std_msgs/Int8MultiArray.h>
 #include <sensor_msgs/Image.h>
 
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <sstream>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
@@ -51,6 +53,8 @@ private:
     //ros发布端、订阅端、服务客户端
     ros::Subscriber color_serial_sub;
     ros::Subscriber cube_image_sub;
+    ros::Subscriber cube_fsm_states_sub_;
+    ros::Subscriber progress_rb_solve_magic_;
     ros::Publisher update_color_serial_pub;
     ros::Publisher stop_move_pub_;
     ros::ServiceClient hscfsm_task_client_;
@@ -68,6 +72,8 @@ private:
 
     //接收到的颜色序列
     //std::vector<cv::Mat> Imgsvec;
+
+    std::string cube_fsm_state_;
 
 private:
 
@@ -101,18 +107,29 @@ private:
      */
     int taskServerCmd(const std::string& behavior, const std::string& next_state, const std::vector<std::string>& params=std::vector<std::string>());
 
+    void cubeFsmStateSubCB(const std_msgs::StringConstPtr& msg);
+
+    void progressRbSolveMagicCB(const std_msgs::Int8MultiArrayConstPtr& msg);
+
+    void setAllpushButtonOff();
+
 
 signals:
 
     /*
      * @brief: 显示颜色序列自定义信号
      */
-    void displayCubeStr(QString);
+    void displayCubeStr();
 
     /*
      * @brief: 显示魔方图片自定义信号
      */
     void displayCubeImg();
+
+    /*
+     * @brief: 显示进度自定义信号
+     */
+    void displayProgress();
 
 private slots:
 
@@ -124,12 +141,12 @@ private slots:
     /*
      * @brief: 魔方解算按钮槽函数
      */
-    void slot_solveButton_clicked();
+//    void slot_solveButton_clicked();
 
     /*
      * @brief: 执行解算按钮槽函数
      */
-    void slot_excuteButton_clicked();
+//    void slot_excuteButton_clicked();
 
     /*
      * @brief: 全自动按钮槽函数
@@ -139,12 +156,14 @@ private slots:
     /*
      * @brief: 显示所识别颜色序列槽函数
      */
-    void slot_colorSerialDisay(QString arg);
+    void slot_colorSerialDisay();
 
     /*
      * @brief: 显示所识别魔方图片槽函数
      */
-    void slot_cubeImgDisay();
+    void slot_cubeImgDisplay();
+
+    void slot_solveProgressDisplay();
 
     void slot_prepareButton_clicked();
 
@@ -153,6 +172,11 @@ private slots:
     void slot_resetButton_clicked();
 
     void on_stopMovePushButton_clicked();
+    void on_comboBox_cubeface_activated(const QString &arg1);
+    void on_comboBox_rotatoAngle_activated(const QString &arg1);
+    void on_pushButton_intoStep_clicked();
+    void on_pushButton_step_clicked();
+    void on_pushButton_exitStep_clicked();
 };
 
 #endif // CUBEWIDGET_H

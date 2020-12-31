@@ -55,6 +55,8 @@ private slots:
 
     void on_btn_tabmain_close_clicked();
 
+    void on_cbox_tabmain_chooseMode_activated(const QString &arg1);
+
 private:
 
     //ROS节点指针

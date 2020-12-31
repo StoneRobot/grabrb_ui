@@ -35,15 +35,16 @@ void cubeWidget::signalAndSlot()
 {
     //绑定信号与槽
     connect(ui->collectButton, SIGNAL(clicked(bool)), this, SLOT(slot_collectButton_clicked()));
-    connect(ui->solveButton, SIGNAL(clicked(bool)), this, SLOT(slot_solveButton_clicked()));
-    connect(ui->excuteButton, SIGNAL(clicked(bool)), this, SLOT(slot_excuteButton_clicked()));
+//    connect(ui->solveButton, SIGNAL(clicked(bool)), this, SLOT(slot_solveButton_clicked()));
+//    connect(ui->excuteButton, SIGNAL(clicked(bool)), this, SLOT(slot_excuteButton_clicked()));
     connect(ui->automaticButton, SIGNAL(clicked(bool)), this, SLOT(slot_automaticButton_clicked()));
     connect(ui->prepareButton, SIGNAL(clicked(bool)), this, SLOT(slot_prepareButton_clicked()));
     connect(ui->placeCubeButton, SIGNAL(clicked(bool)), this, SLOT(slot_placeCubeButton_clicked()));
     connect(ui->resetButton, SIGNAL(clicked(bool)), this, SLOT(slot_resetButton_clicked()));
 
-    connect(this, SIGNAL(displayCubeStr(QString)), this, SLOT(slot_colorSerialDisay(QString)));
-    connect(this, SIGNAL(displayCubeImg()), this, SLOT(slot_cubeImgDisay()));
+    connect(this, SIGNAL(displayCubeStr()), this, SLOT(slot_colorSerialDisay()));
+    connect(this, SIGNAL(displayCubeImg()), this, SLOT(slot_cubeImgDisplay()));
+    connect(this, SIGNAL(displayProgress()), this, SLOT(slot_solveProgressDisplay()));
 }
 
 void cubeWidget::uiInit()
@@ -56,6 +57,11 @@ void cubeWidget::uiInit()
     ImgLabels.push_back(ui->LeftImg_label);
     ImgLabels.push_back(ui->FrontImg_label);
     ImgLabels.push_back(ui->BackImg_label);
+    setAllpushButtonOff();
+
+    ui->progressBar->setMinimum(0);
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(0);
 
     for (size_t i = 0; i < ImgLabels.size(); ++i)
     {
@@ -74,6 +80,8 @@ void cubeWidget::rosInit()
 //    cube_image_sub = Node->subscribe <sensor_msgs::Image>("/cube_image", 1, &cubeWidget::cubeImg_callback, this);
     hscfsm_task_client_ = Node->serviceClient<hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
     stop_move_pub_ = Node->advertise<std_msgs::Bool>("/stop_move", 10);
+    cube_fsm_states_sub_ = Node->subscribe("/rubik_fsm_state", 10, &cubeWidget::cubeFsmStateSubCB, this);
+    progress_rb_solve_magic_ = Node->subscribe("/progress_rbSolveMagic", 10, &cubeWidget::progressRbSolveMagicCB, this);
 }
 
 
@@ -92,20 +100,24 @@ void cubeWidget::setFsmState(bool isOpen)
 
 void cubeWidget::slot_collectButton_clicked()
 {
-    std::cout << "采集魔方数据中..." <<std::endl;
-    taskServerCmd("photo", "take_photo");
-}
+    std::string text = ui->collectButton->text().toUtf8().data();
+    if(text == "采集魔方数据")
+    {
+        std::cout << "采集魔方数据中..." <<std::endl;
+        taskServerCmd("photo", "take_photo");
+    }
+    else if(text == "魔方解算")
+    {
+        std::cout << "解算魔方中..." << std::endl;
+        taskServerCmd("request_data", "solve_data");
+    }
+    else if(text == "执行解算")
+    {
+        std::cout << "还原魔方中..." << std::endl;
+        taskServerCmd("solve", "execute");
+    }
 
-void cubeWidget::slot_solveButton_clicked()
-{
-    std::cout << "解算魔方中..." << std::endl;
-    taskServerCmd("request_data", "solve_data");
-}
 
-void cubeWidget::slot_excuteButton_clicked()
-{
-    std::cout << "还原魔方中..." << std::endl;
-    taskServerCmd("solve", "execute");
 }
 
 void cubeWidget::slot_automaticButton_clicked()
@@ -116,10 +128,8 @@ void cubeWidget::slot_automaticButton_clicked()
 }
 
 
-void cubeWidget::slot_colorSerialDisay(QString arg)
+void cubeWidget::slot_colorSerialDisay()
 {
-    Q_UNUSED(arg);
-
     std::vector<QLineEdit *> Qline_list;
     std::vector<QLineEdit *>().swap(Qline_list);
 
@@ -143,7 +153,7 @@ void cubeWidget::slot_cubeImgDisay()
 //    {
 //       QImage qimage((uchar*)Imgsvec[i].data, liImgsvec[i].cols, Imgsvec[i].rows, QImage::Format_RGB888);
 //       QPixmap tem_pixmap = QPixmap::fromImage(qimage);
-//       ImgLabels[i]->setPixmap(tem_pixmap);
+//       +-[i]->setPixmap(tem_pixmap);
 //    }
 }
 
@@ -157,8 +167,6 @@ void cubeWidget::slot_prepareButton_clicked()
 
 void cubeWidget::slot_placeCubeButton_clicked()
 {
-    ui->placeCubeButton->setEnabled(false);
-    std::cout << "place cube" << std::endl;
     std::cout << "place cube" << std::endl;
     taskServerCmd("place", "place cube");
 }
@@ -175,11 +183,12 @@ void cubeWidget::slot_resetButton_clicked()
 
 void cubeWidget::colorSerial_callback(const std_msgs::String::ConstPtr &msg)
 {
-    std::string result = msg->data.c_str();
+    std::string result = msg->data.c_str();`
     std::cout << "接收到的数据为: " << result << std::endl;
 
     //进行数据装换
-    color_serial =QString::fromStdString(result);
+    color_serial = QString::fromStdString(result);
+    emit displayCubeStr();
 }
 
 //void cubeWidget::cubeImg_callback(const sensor_msgs::Image_::ConstPtr &msg)
@@ -233,3 +242,122 @@ void cubeWidget::on_stopMovePushButton_clicked()
     stop_move_pub_.publish(msg);
     ui->stopMovePushButton->setEnabled(true);
 }
+
+void cubeWidget::on_comboBox_cubeface_activated(const QString &arg1)
+{
+    std::string text = ui->comboBox_cubeface->currentText().toUtf8().data();
+    std::string text2 = ui->comboBox_rotatoAngle->currentText().toUtf8().data();
+    if(text == "选择魔方面" || text2 == "选择角度")
+    {
+        ui->pushButton_step->setEnabled(false);
+    }
+    else
+    {
+        ui->pushButton_step->setEnabled(true);
+    }
+}
+
+void cubeWidget::cubeFsmStateSubCB(const std_msgs::StringConstPtr& msg)
+{
+    setAllpushButtonOff();
+    cube_fsm_state_ = msg->data;
+    std::vector<QPushButton*> pb;
+    if(cube_fsm_state_ == "init")
+    {
+        pb={ui->prepareButton};
+    }
+    if(cube_fsm_state_ == "home")
+    {
+        pb = {ui->collectButton, ui->automaticButton, ui->pushButton_intoStep};
+        ui->collectButton->setText("采集魔方数据");
+    }
+    else if(cube_fsm_state_ == "photo")
+    {
+        pb = {ui->collectButton, ui->placeCubeButton, ui->stopMovePushButton};
+        ui->collectButton->setText("魔方解算");
+    }
+    else if(cube_fsm_state_ == "request_data")
+    {
+        pb = {ui->collectButton, ui->placeCubeButton, ui->stopMovePushButton};
+        ui->collectButton->setText("执行解算");
+    }
+    else if(cube_fsm_state_ =="solve")
+    {
+        pb = {ui->placeCubeButton, ui->stopMovePushButton};
+    }
+    else if(cube_fsm_state_ == "place")
+    {
+        pb = {ui->stopMovePushButton, ui->prepareButton};
+    }
+    else if(cube_fsm_state_ == "exit")
+    {
+        pb = {ui->resetButton};
+    }
+    else if(cube_fsm_state_ == "step")
+    {
+        pb = {ui->pushButton_exitStep, ui->pushButton_step};
+    }
+    for(auto i:pb)
+    {
+        i->setEnabled(true);
+    }
+}
+
+void cubeWidget::progressRbSolveMagicCB(const std_msgs::Int8MultiArrayConstPtr& msg)
+{
+//    if(msg->data.size()!=2)
+//        return;
+//    ui->progressBar->setMaximum(static_cast<int>(msg->data[0]));
+//    ui->progressBar->setValue(static_cast<int>(msg->data[1]));
+}
+
+void cubeWidget::setAllpushButtonOff()
+{
+    std::vector<QPushButton*> pushButton_label={ui->prepareButton, ui->collectButton, ui->stopMovePushButton,
+                                          ui->placeCubeButton, ui->automaticButton, ui->resetButton, ui->pushButton_intoStep,
+                                          ui->pushButton_step, ui->pushButton_exitStep};
+    for(auto i: pushButton_label)
+    {
+        i->setEnabled(false);
+    }
+}
+
+void cubeWidget::on_comboBox_rotatoAngle_activated(const QString &arg1)
+{
+    std::string text = ui->comboBox_cubeface->currentText().toUtf8().data();
+    std::string text2 = ui->comboBox_rotatoAngle->currentText().toUtf8().data();
+    if(text == "选择魔方面" || text2 == "选择角度")
+    {
+        ui->pushButton_step->setEnabled(false);
+    }
+    else
+    {
+        ui->pushButton_step->setEnabled(true);
+    }
+}
+
+void cubeWidget::on_pushButton_intoStep_clicked()
+{
+    std::cout << "toStep button" << std::endl;
+    taskServerCmd("toStep", "Step");
+}
+
+void cubeWidget::on_pushButton_step_clicked()
+{
+    std::cout << "next button" << std::endl;
+    std::vector<std::string> params;
+    params.resize(2);
+    int index = ui->comboBox_cubeface->currentIndex();
+    std::stringstream ss;
+    ss << index;
+    ss >> params[0];
+    params[1] = ui->comboBox_rotatoAngle->currentText().toUtf8().data();
+    taskServerCmd("next", "next", params);
+}
+
+void cubeWidget::on_pushButton_exitStep_clicked()
+{
+    std::cout << "toHome button" << std::endl;
+    taskServerCmd("toHome", "toHome");
+}
+

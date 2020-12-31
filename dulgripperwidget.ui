@@ -236,11 +236,6 @@ padding:0 1px;
              <widget class="QComboBox" name="robotBox">
               <item>
                <property name="text">
-                <string>Robot</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
                 <string>左边机器人</string>
                </property>
               </item>
@@ -266,11 +261,6 @@ padding:0 1px;
              <widget class="QComboBox" name="pickModeBox">
               <item>
                <property name="text">
-                <string>Mode</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
                 <string>桌子到货架</string>
                </property>
               </item>
@@ -283,31 +273,38 @@ padding:0 1px;
             </item>
            </layout>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QPushButton" name="prepareButton">
             <property name="text">
              <string>准备</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QPushButton" name="gripButton">
             <property name="text">
              <string>抓取</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="6" column="0">
            <widget class="QPushButton" name="stopButton">
             <property name="text">
              <string>停止</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="7" column="0">
            <widget class="QPushButton" name="resetButton">
             <property name="text">
              <string>重置</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="pushButton_voice_control">
+            <property name="text">
+             <string>语音控制</string>
             </property>
            </widget>
           </item>
