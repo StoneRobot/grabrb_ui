@@ -173,7 +173,7 @@ void dulgripperWidget::slot_resetButton_clicked()
 {
     ui->resetButton->setEnabled(false);
     std::cout << "重置" << std::endl;
-    taskServerCmd("restart", "init");
+    taskServerCmd("reset", "init");
     ui->resetButton->setEnabled(true);
 }
 

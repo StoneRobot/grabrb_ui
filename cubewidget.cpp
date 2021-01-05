@@ -156,7 +156,7 @@ void cubeWidget::slot_solveProgressDisplay()
     ui->progressBar->setValue(progress_data[1]);
 }
 
-void cubeWidget::slot_solveResultQM(bool arg)
+void cubeWidget::solveResultQM(bool arg)
 {
     QMessageBox* box = new QMessageBox;
     box->setAttribute(Qt::WA_DeleteOnClose);
