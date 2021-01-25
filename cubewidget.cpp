@@ -152,7 +152,11 @@ void cubeWidget::slot_cubeImgDisplay()
 
 void cubeWidget::slot_solveProgressDisplay()
 {
-    ui->progressBar->setMaximum(progress_data[0]);
+    if(progress_data[2] != progress_data[0])
+    {
+        ui->progressBar->setMaximum(progress_data[0]);
+        progress_data[2] = progress_data[0];
+    }
     ui->progressBar->setValue(progress_data[1]);
 }
 
@@ -270,8 +274,13 @@ void cubeWidget::on_comboBox_cubeface_activated(const QString &arg1)
 
 void cubeWidget::cubeFsmStateSubCB(const std_msgs::StringConstPtr& msg)
 {
-    setAllpushButtonOff();
     cube_fsm_state_ = msg->data;
+    emit setFsmPushButton();
+}
+
+void cubeWidget::setFsmPushButton()
+{
+    setAllpushButtonOff();
     std::vector<QPushButton*> pb;
     if(cube_fsm_state_ == "init")
     {
@@ -320,9 +329,12 @@ void cubeWidget::progressRbSolveMagicCB(const std_msgs::Int8MultiArrayConstPtr& 
         return;
 
     //清空数据并赋值
-    std::memset(progress_data, 0, sizeof(progress_data));
-    for (auto i: msg->data)
-        progress_data[i] = i;
+//    std::memset(progress_data, 0, sizeof(progress_data));
+
+    for(int i =0; i<2; i++)
+    {
+        progress_data[i] = msg->data[i];
+    }
 
     //触发更新显示进度信号
     emit displayProgress();

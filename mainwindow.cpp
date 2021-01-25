@@ -34,11 +34,11 @@ MainWindow::~MainWindow()
 {
     monitor_timer_.stop();
     system("killall status_monitor_node");
-    system("kill -9 $(ps -ef | grep status_monitor | awk '{print $2}')");
+//    system("kill -9 $(ps -ef | grep status_monitor | awk '{print $2}')");
     system("rosnode kill $(rosnode list | grep -v rosout) &") ;
     sleep(5);
     system("killall hscfsm_bridge");
-    system("kill -9 $(ps -ef | grep hscfsm | awk '{print $2}')");
+//    system("kill -9 $(ps -ef | grep hscfsm | awk '{print $2}')");
     system("kill -9 $(ps -ef | grep rviz | awk '{print $2}')");
     system("rosrun status_monitor cleanup.sh &");
     sleep(2);
@@ -122,18 +122,18 @@ void MainWindow::setLabel(QLabel* label, bool status)
 
 void MainWindow::rosReset()
 {
-    std::vector<bool> isReset;
-    bool reset[2];
-    isReset.resize(2);
-    Node->getParam("/status/right_robot_connet", reset[0]);
-    Node->getParam("/status/left_robot_connet", reset[1]);
-    if(reset[0] && reset[1])
-    {
+//    std::vector<bool> isReset;
+//    bool reset[2];
+//    isReset.resize(2);
+//    Node->getParam("/status/right_robot_connet", reset[0]);
+//    Node->getParam("/status/left_robot_connet", reset[1]);
+//    if(reset[0] && reset[1])
+//    {
         system("rosnode kill $(rosnode list | grep -v Gomoku_UI | grep -v status_monitor | grep -v rosout) &") ;
         sleep(5);
         system("rosrun status_monitor cleanup.sh &");
         sleep(2);
-    }
+//    }
 }
 
 void MainWindow::initMonitorLabel()
@@ -179,6 +179,7 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
     bool cube = false;
     bool dul = false;
     monitor_timer_.stop();
+    system("rosnode kill /hscfsm_bridge");
     system("killall hscfsm_bridge");
     sleep(1);
     system("rosrun hscfsm_bridge hscfsm_bridge &");
@@ -208,6 +209,7 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
 
     if(!start_task_client_.call(srv))
     {
+        system("rosnode kill /hscfsm_bridge");
         system("killall hscfsm_bridge");
         sleep(1);
         system("rosrun hscfsm_bridge hscfsm_bridge &");

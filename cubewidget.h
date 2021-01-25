@@ -83,7 +83,7 @@ private:
     std::vector<cv::Mat> Imgsvec;
 
     //解魔方进度数据
-    int progress_data[2];
+    int progress_data[3];
 
     std::string cube_fsm_state_;
 
@@ -144,6 +144,7 @@ private:
      */
     void solveResultQM(bool arg);
 
+    void setFsmPushButton();
 
 signals:
 
@@ -161,6 +162,7 @@ signals:
      * @brief: 显示进度自定义信号
      */
     void displayProgress();
+
 
 private slots:
 

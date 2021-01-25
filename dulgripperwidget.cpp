@@ -139,6 +139,28 @@ void dulgripperWidget::slot_prepareButton_clicked()
 
 void dulgripperWidget::slot_gripButton_clicked()
 {
+    std::string robot = ui->robotBox->currentText().toUtf8().data();
+    std::cout << "选取机器人: " << robot  << std::endl;
+    if(robot == "右边机器人")
+    {
+        robot_ = "1";
+    }
+    else
+    {
+        robot_ = "0";
+    }
+
+    std::string pick_mode = ui->pickModeBox->currentText().toUtf8().data();
+    std::cout << "抓取模式: " << pick_mode << std::endl;
+    if(pick_mode == "桌子到货架")
+    {
+        pick_mode_ = "1";
+    }
+    else
+    {
+        pick_mode_ = "0";
+    }
+
     ui->gripButton->setEnabled(false);
     std::cout << "開始抓取" << std::endl;
     std::vector<std::string> params = {robot_, pick_mode_};
@@ -181,32 +203,14 @@ void dulgripperWidget::slot_robotBox_currentIndexChanged(const int &arg1)
 {
     Q_UNUSED(arg1);
 
-    std::string robot = ui->robotBox->currentText().toUtf8().data();
-    std::cout << "选取机器人: " << robot  << std::endl;
-    if(robot == "右边机器人")
-    {
-        robot_ = "1";
-    }
-    else
-    {
-        robot_ = "0";
-    }
+
 }
 
 void dulgripperWidget::slot_pickModeBox_currentIndexChanged(const int &arg1)
 {
     Q_UNUSED(arg1);
 
-    std::string pick_mode = ui->pickModeBox->currentText().toUtf8().data();
-    std::cout << "抓取模式: " << pick_mode << std::endl;
-    if(pick_mode == "桌子到货架")
-    {
-        pick_mode_ = "1";
-    }
-    else
-    {
-        pick_mode_ = "0";
-    }
+
 }
 
 void dulgripperWidget::slot_RevPixmap()
@@ -253,3 +257,8 @@ int dulgripperWidget::taskServerCmd(const std::string& behavior, const std::stri
     }
     return -1;
 }
+
+//void dulgripperWidget::on_pushButton_voice_control_clicked()
+//{
+    
+//}
