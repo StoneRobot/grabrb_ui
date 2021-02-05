@@ -16,6 +16,7 @@
 #include <std_msgs/Int8MultiArray.h>
 #include <sensor_msgs/Image.h>
 #include <std_msgs/Bool.h>
+#include <std_srvs/SetBool.h>
 
 #include <iostream>
 #include <string.h>
@@ -63,6 +64,8 @@ private:
     ros::Publisher stop_move_pub_;
     ros::ServiceClient hscfsm_task_client_;
     ros::ServiceClient cube_correct_client;
+
+    ros::ServiceClient camera_manager_client;
 
     //魔方状态机开启状态标志位
     bool fsm_open_;

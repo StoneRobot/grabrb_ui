@@ -85,6 +85,7 @@ void cubeWidget::rosInit()
     cube_image_sub = Node->subscribe <cube_bridge::rbImageList>("/cube_image", 1, &cubeWidget::cubeImg_callback, this);
     hscfsm_task_client_ = Node->serviceClient<hirop_msgs::taskInputCmd>("/VoiceCtlRob_TaskServerCmd");
     cube_correct_client = Node->serviceClient<cube_bridge::rb_string>("/cube_correct");
+    camera_manager_client = Node->serviceClient<std_srvs::SetBool>("/camera_on_off");
     stop_move_pub_ = Node->advertise<std_msgs::Bool>("/stop_move", 10);
     cube_fsm_states_sub_ = Node->subscribe("/rubik_fsm_state", 10, &cubeWidget::cubeFsmStateSubCB, this);
     progress_rb_solve_magic_ = Node->subscribe("/progress_rbSolveMagic", 10, &cubeWidget::progressRbSolveMagicCB, this);
@@ -293,11 +294,17 @@ void cubeWidget::setFsmPushButton()
     }
     else if(cube_fsm_state_ == "photo")
     {
+        std_srvs::SetBool srv;
+        srv.request.data = true;
+        camera_manager_client.call(srv);
         pb = {ui->collectButton, ui->placeCubeButton, ui->stopMovePushButton};
         ui->collectButton->setText("魔方解算");
     }
     else if(cube_fsm_state_ == "request_data")
     {
+        std_srvs::SetBool srv;
+        srv.request.data = false;
+        camera_manager_client.call(srv);
         pb = {ui->collectButton, ui->placeCubeButton, ui->stopMovePushButton};
         ui->collectButton->setText("执行解算");
     }
