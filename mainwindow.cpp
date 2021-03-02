@@ -189,6 +189,7 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
     {
         srv.request.taskId = 3;
         load_gobang_ = true;
+        system("rosservice call /camera_on_off 'data: true'");
         gobang = true;
     }
     else if(fsm == "拧魔方")
@@ -198,6 +199,7 @@ void MainWindow::on_btn_tabmain_loadFsm_clicked()
     }
     else if(fsm == "双臂抓取")
     {
+        system("rosservice call /camera_on_off 'data: true'");
         srv.request.taskId = 5;
         dul = true;
     }

@@ -57,6 +57,7 @@ void gobangWidget::signalAndSlot()
     connect(ui->FirstRoundBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_FirstRoundBox_currentIndexChanged(int)));
     connect(ui->ModeBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_ModeBox_currentIndexChanged(int)));
     connect(this, SIGNAL(displayPixmap()), this, SLOT(slot_RevPixmap()));
+    connect(this, SIGNAL(displayResult()), this, SLOT(showLog()));
 }
 
 void gobangWidget::uiInit()
@@ -314,11 +315,12 @@ void gobangWidget::refreshAttackSide(int attacker)
     }
 }
 
-void gobangWidget::showLog(std::string log)
+void gobangWidget::showLog()
 {
-    if (log == "humanA" || log == "humanB" || log == "robotA" || log == "robotB")
+
+    if (gameResult == "humanA" || gameResult == "humanB" || gameResult == "robotA" || gameResult == "robotB")
     {
-        std::string word = log + "取得胜利";
+        std::string word = gameResult + "取得胜利";
         const char *p = word.c_str();
         QMessageBox::information(this, "Warn", QString::fromLocal8Bit(p));
         return;
@@ -326,7 +328,7 @@ void gobangWidget::showLog(std::string log)
 
     else
     {
-        const char *p = log.c_str();
+        const char *p = gameResult.c_str();
         QMessageBox::information(this, "Warn", QString::fromLocal8Bit(p));
         return;
     }
@@ -394,8 +396,8 @@ void gobangWidget::attackerSub_callback(const std_msgs::Int16::ConstPtr &msg)
 
 void gobangWidget::logSub_callback(const std_msgs::String::ConstPtr& msg)
 {
-    std::string result = msg->data.c_str();
-    showLog(result);
+    gameResult = msg->data.c_str();
+    emit displayResult();
 }
 
 int gobangWidget::taskServerCmd(const std::string &behavior, const std::string &next_state, const std::vector<std::string> &params)

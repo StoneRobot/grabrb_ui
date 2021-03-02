@@ -75,11 +75,6 @@ private:
     void refreshState(std::string state);
 
     /*
-     * @brief: 显示日志
-     */
-    void showLog(std::string log);
-
-    /*
      * @brief: 设置QLabel状态
      */
     void setLabelShow(QLabel* label, std::string color);
@@ -90,6 +85,7 @@ signals:
 
     //自定义显示图片信号
     void displayPixmap();
+    void displayResult();
 
 
 private slots:
@@ -144,6 +140,11 @@ private slots:
      */
     void slot_ConfirmButtton_clicked();
 
+    /*
+     * @brief: 显示日志
+     */
+    void showLog();
+
 private:
 
     //ros节点指针
@@ -171,6 +172,9 @@ private:
     //状态机状态数组
     int fsm_state[5];
     std::vector<QLabel* > stateLabels;
+
+    //棋局胜负结果
+    std::string gameResult;
 
     bool fsm_open_;
 
